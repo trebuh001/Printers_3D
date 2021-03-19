@@ -11,9 +11,9 @@ It's some kind of "application blog" for people who wants learn something about 
 
 # Done
 - connect application to Firebase Database,
-- Login/Register System based on E-mail (in the next step should be add new option of login to app),
-- Two languages: English (default) and Polish (for choosing polish language in the android operating system),
-- Dark/Light mode of application.
+- login/register system based on e-mail (in the next step should be add new option of login to app),
+- two languages: english (default) and polish (for choosing polish language in the android operating system),
+- dark/light mode of application.
 
 # Next Step
 - add additional login options,
