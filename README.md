@@ -6,8 +6,8 @@ It will be educational application about 3D printers.
 Future features:
 It's some kind of "application blog" for people who wants learn something about build of 3d printer or they exactly want to build that machine but they don't know how start. 
 
-Database: Firebase,
-Programming language: Kotlin.
+- Database: Firebase,
+- Programming language: Kotlin.
 
 # Done
 - connect application to Firebase Database,
