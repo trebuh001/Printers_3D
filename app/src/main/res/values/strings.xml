@@ -1,0 +1,83 @@
+<resources>
+    <string name="facebook_app_id">487729295968039</string>
+    <string name="fb_login_protocol_scheme">fb487729295968039</string>
+    <string name="app_name">3DPrinters</string>
+
+
+    <!-- MainActivity -->
+    <string name="main_activity_title">Blog about 3D Printers</string>
+    <string name="main_activity_login">Login</string>
+    <string name="main_activity_register">Registration</string>
+    <string name="main_activity_night_mode_on">Dark Mode ON</string>
+    <string name="main_activity_light_mode_on">Light Mode ON</string>
+    <!-- LoginActivity  -->
+    <string name="login_activity_button">Log in</string>
+    <string name="hint_email_edittext">Enter e-mail</string>
+    <string name="hint_password_edittext">Enter password</string>
+    <string name="toast_login_success">Login was successful</string>
+
+    <!-- RegistrationActivity      -->
+    <string name="hint_name_edittext">Enter user name</string>
+    <string name="registration_activity_register_btn">Register</string>
+    <string name="hint_password_edittext_repeat">Repeat password</string>
+    <string name="passwords_not_same">Passwords not the same!</string>
+    <string name="password_longer_than_12_char">Password is longer than 12 characters!</string>
+    <string name="hint_register_error">Registration Error. User with such an e=mail address already exists</string>
+
+    <!-- UserSettingsActivity      -->
+    <string name="user_name">Name:</string>
+    <string name="hint_enter_description">Write something about yourself&#8230;</string>
+    <string name="email_address">E-mail:</string>
+    <string name="update_description">Update description</string>
+    <string name="change_password">Change password</string>
+    <string name="change_avatar">Change avatar</string>
+    <string name="change_email">Change email</string>
+    <string name="logout">Logout</string>
+    <string name="logout_successful">Logout successful</string>
+    <string name="description_profile_changed_success">Description in profile has been changed</string>
+    <string name="description_profile_changed_error">Error while changing description in profile</string>
+    <string name="name_profile_changed_success">Name in profile has been changed</string>
+    <string name="name_profile_changed_error">Error while changing name in profile</string>
+    <string name="email_not_valid">email is not valid</string>
+    <string name="name_shorter_than_3_char">Name is shorter than 3 characters!</string>
+    <string name="email_shorter_than_5_char">Email is shorter than 5 characters!</string>
+    <string name="password_shorter_than_6_char">Password is shorter than 6 characters!</string>
+    <string name="field_cant_be_empty">Field not able to be empty!</string>
+    <string name="edit_name_confirm">Confirm name edits</string>
+    <string name="invalid_email_password">Invalid email or password. Try again. </string>
+    <string name="avatar_dialog_interface_message">What do you want to do with your avatar?</string>
+    <string name="avatar_dialog_interface_button_set_from_camera">Set avatar with camera</string>
+    <string name="avatar_dialog_interface_button_set_from_device_storage">Set avatar from device</string>
+    <string name="avatar_dialog_interface_button_set_default">Set default avatar</string>
+    <string name="avatar_restoring_default_success">Restoring default avatar - success</string>
+    <string name="avatar_restoring_default_error">Restoring default avatar - error</string>
+    <string name="registration_sucessful">Registration successful</string>
+    <string name="registration_error">Registration Error</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="go_forum">Go to the Forum</string>
+
+    <!-- RemindPasswordActivity   -->
+    <string name="remind_password">Remind Password</string>
+    <string name="toast_remind_password">E-mail with password recovery instruction has been sent</string>
+    <string name="error_remind_password">Error. Check if entered email is correct.</string>
+
+    <!-- ChangePasswordActivity -->
+    <string name="hint_old_password">Enter old password</string>
+    <string name="hint_new_password">Enter new password</string>
+    <string name="hint_new_password_repeat">Repeat new pass</string>
+    <string name="auth_successful">Re-authentication successful</string>
+    <string name="auth_error">Re-authentication error</string>
+    <string name="password_changed_success">Password has been changed successfully</string>
+    <string name="password_changed_error">Error while changing password</string>
+    <!-- ChangeEmailActivity -->
+    <string name="hint_old_email">Enter old email</string>
+    <string name="hint_new_email">Enter new email</string>
+    <string name="hint_new_email_repeat">Repeat new email</string>
+    <string name="email_changed_success">Email has been changed successfully</string>
+    <string name="email_changed_error">Error while changing email</string>
+    <string name="email_profile_changed_success">E-mail in profile has been changed</string>
+    <string name="email_profile_changed_error">Error while changing email in profile</string>
+    <!-- StartForumActivity    -->
+    <string name="start_forum_title">Forum</string>
+
+</resources>

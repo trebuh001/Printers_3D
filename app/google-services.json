@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "729076098406",
+    "firebase_url": "https://dprinters-90710.firebaseio.com",
+    "project_id": "dprinters-90710",
+    "storage_bucket": "dprinters-90710.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729076098406:android:f5a4490485ba1b212194a7",
+        "android_client_info": {
+          "package_name": "com.example.printers_3d"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729076098406-3s5m6o3gp3rkgmqjcfl38c5enise7fb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMhErlcreNLV_Y3sN_RljFuGwj9BaYfSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729076098406-3s5m6o3gp3rkgmqjcfl38c5enise7fb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

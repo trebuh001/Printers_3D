@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">487729295968039</string>
+    <string name="fb_login_protocol_scheme">fb487729295968039</string>
+    <string name="app_name">3DPrinters</string>
+
+
+    <!-- MainActivity -->
+    <string name="main_activity_title">Blog o drukarkach 3D</string>
+    <string name="main_activity_login">Logowanie</string>
+    <string name="main_activity_register">Rejestracja</string>
+    <string name="main_activity_night_mode_on">Włącz tryb ciemny </string>
+    <string name="main_activity_light_mode_on">Włącz tryb jasny</string>
+    <!-- LoginActivity   -->
+    <string name="login_activity_button">Zaloguj</string>
+    <string name="hint_email_edittext">Podaj e-mail</string>
+    <string name="hint_password_edittext">Podaj hasło</string>
+    <string name="toast_login_success">Logowanie przebiegło pomyślnie</string>
+
+    <!-- RegistrationActivity    -->
+    <string name="hint_name_edittext">Podaj nazwę użytk.</string>
+    <string name="registration_activity_register_btn">Zarejestruj</string>
+    <string name="hint_password_edittext_repeat">Powtórz hasło</string>
+    <string name="passwords_not_same">Hasła nie są takie same!</string>
+    <string name="password_longer_than_12_char">Hasło jest dłuższe niż 12 znaków!</string>
+    <string name="hint_register_error">Błąd Rejestracji. Użytk. z takim adresem e-mail już istnieje</string>
+
+
+
+    <!-- UserSettingsActivity      -->
+    <string name="user_name">Nazwa:</string>
+    <string name="hint_enter_description">Napisz coś o sobie&#8230;</string>
+    <string name="email_address">E-mail:</string>
+    <string name="update_description">Zaktualizuj opis</string>
+    <string name="change_password">Zmień hasło</string>
+    <string name="change_avatar">Zmień avatar</string>
+    <string name="change_email">Zmień email</string>
+    <string name="logout">Wyloguj</string>
+    <string name="logout_successful">Wylogowanie pomyślne</string>
+    <string name="description_profile_changed_success">Opis profilu został zmieniony</string>
+    <string name="description_profile_changed_error">Błąd podczas zmiany opisu profilu</string>
+    <string name="name_profile_changed_success">Nazwa profilu została zmieniona</string>
+    <string name="name_profile_changed_error">Błąd podczas zmiany nazwy profilu</string>
+    <string name="email_not_valid">email jest nieprawidłowy</string>
+    <string name="name_shorter_than_3_char"> Nazwa jest krótsza niż 3 znaki!</string>
+    <string name="email_shorter_than_5_char">Email jest krótszy niż 5 znaków!</string>
+    <string name="password_shorter_than_6_char">Hasło jest krótsze niż 6 znaków!</string>
+    <string name="field_cant_be_empty">Pole nie może być puste!</string>
+    <string name="edit_name_confirm">Potwierdź edycję nazwy</string>
+    <string name="invalid_email_password">Nieprawidłowy login lub hasło. Spróbuj jeszcze raz. </string>
+    <string name="avatar_dialog_interface_message">Co chcesz zrobić ze swoim obrazkiem profilowym</string>
+    <string name="avatar_dialog_interface_button_set_from_camera">Ustaw obrazek za pomocą aparatu</string>
+    <string name="avatar_dialog_interface_button_set_from_device_storage">Ustaw obrazek z pamięci urządzenia</string>
+    <string name="avatar_dialog_interface_button_set_default">Ustaw domyślny obrazek</string>
+    <string name="avatar_restoring_default_success">Przywracanie domyślnego obrazka - sukces</string>
+    <string name="avatar_restoring_default_error">Przywracanie domyślnego obrazka - błąd</string>
+    <string name="registration_sucessful">Rejestracja przebiegła pomyślnie</string>
+    <string name="registration_error">Błąd rejestracji</string>
+    <string name="forgot_password">Zapomniałeś hasło?</string>
+    <string name="go_forum">Przejdź na Forum</string>
+
+    <!-- RemindPasswordActivity   -->
+    <string name="remind_password">Przypomnij hasło</string>
+    <string name="toast_remind_password">E-mail z instrukcją odzyskiwania hasła został wysłany</string>
+    <string name="error_remind_password">Error. Sprawdź czy wpisany e-mail jest prawidłowy</string>
+
+    <!-- ChangePasswordActivity -->
+    <string name="hint_old_password">Podaj stare hasło</string>
+    <string name="hint_new_password">Podaj nowe hasło</string>
+    <string name="hint_new_password_repeat">Powtórz nowe hasło</string>
+    <string name="auth_successful">Ponowne uwierzytelnianie powiodło się</string>
+    <string name="auth_error">Błąd ponownego uwierzytelniania</string>
+    <string name="password_changed_success">Hasło zostało zmienione pomyślnie</string>
+    <string name="password_changed_error">Błąd podczas zmiany hasła</string>
+
+    <!-- ChangeEmailActivity -->
+    <string name="hint_old_email">Podaj stary email</string>
+    <string name="hint_new_email">Podaj nowy email</string>
+    <string name="hint_new_email_repeat">Powtórz nowy email</string>
+    <string name="email_changed_success">Email został zmieniony pomyślnie</string>
+    <string name="email_changed_error">Błąd podczas zmiany e-maila</string>
+    <string name="email_profile_changed_success">E-mail w profilu został zmieniony</string>
+    <string name="email_profile_changed_error">Błąd podczas zmiany e-maila w profilu</string>
+    <!-- StartForumActivity    -->
+    <string name="start_forum_title">Forum</string>
+
+</resources>

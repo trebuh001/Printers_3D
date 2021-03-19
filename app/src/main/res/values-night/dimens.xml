@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+      <!--dimension: margins & paddings  -->
+    <dimen name="padding_text_primary">10dp</dimen>
+    <dimen name="margin_top_title">20dp</dimen>
+    <dimen name="margin_bottom_title">30dp</dimen>
+    <dimen name="margin_between_buttons">5dp</dimen>
+    <dimen name="margin_horizontal_buttons">20dp</dimen>
+    <dimen name="margin_horizontal_multiline">10dp</dimen>
+    <dimen name="very_small_margin">10dp</dimen>
+
+
+
+
+      <!-- dimension: TextSize         -->
+    <dimen name="text_size_titles">30sp</dimen>
+    <dimen name="text_size_short_titles">40sp</dimen>
+    <dimen name="text_size_buttons">35sp</dimen>
+    <dimen name="text_size_buttons_smaller">25sp</dimen>
+    <dimen name="text_size_edittext_large">30sp</dimen>
+    <dimen name="text_size_medium_size">20sp</dimen>
+    <dimen name="text_size_very_small">10sp</dimen>
+
+
+
+</resources>
