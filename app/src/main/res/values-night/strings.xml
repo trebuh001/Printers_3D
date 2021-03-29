@@ -79,5 +79,8 @@
     <string name="email_profile_changed_error">Error while changing email in profile</string>
     <!-- StartForumActivity    -->
     <string name="start_forum_title">Forum</string>
+    <string name="new_thread">New thread</string>
+    <string name="start_market_title">Market</string>
+    <string name="start_projects_title">Projects - Do it yourself</string>
 
 </resources>

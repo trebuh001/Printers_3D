@@ -86,7 +86,7 @@
         android:text="@string/login_activity_button"
         android:background="@color/background_button"
         />
-    <com.facebook.login.widget.LoginButton
+    <!-- <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp" />  -->
     <Button
         android:onClick="ForgotButton"
         android:padding="@dimen/padding_text_primary"

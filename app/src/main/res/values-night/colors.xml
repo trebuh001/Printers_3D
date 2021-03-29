@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="recycler_line">#000</color>
     <color name="colorPrimary">#09AFFA</color>
     <color name="colorPrimaryDark">#1C7FB8</color>
     <color name="colorAccent">#FCDA9CE4</color>
