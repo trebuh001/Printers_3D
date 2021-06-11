@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/gradient_primary_background"
+    android:layout_marginTop="5dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/frame">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"/>
+        <ImageView
+            android:id="@+id/txt_forum_list_article_dateforum_author_avatar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/user_default_photo"
+            android:paddingVertical="10dp"/>
+        <ProgressBar
+            android:id="@+id/Progress_bar_user_photo_threads"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.55"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="0.9"
+            android:layout_marginVertical="5dp">
+
+        <TextView
+            android:id="@+id/txt_forum_list_article_title"
+            android:textIsSelectable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.33"
+            android:gravity="start"
+            android:textColor="@color/text_standard_color"
+            android:text=""
+            android:singleLine="false"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txt_forum_list_article_author"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
+                android:text="@string/user_name"
+                android:textColor="@color/text_standard_color"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                android:paddingVertical="3dp"
+                android:textSize="12sp"
+                />
+            <TextView
+                android:id="@+id/txt_forum_list_article_date"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
+                android:textColor="@color/text_standard_color"
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/recycler_line">
+        <TextView android:layout_width="match_parent"
+            android:layout_marginBottom="5dp" android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>
