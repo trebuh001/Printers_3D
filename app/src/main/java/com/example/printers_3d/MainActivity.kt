@@ -13,26 +13,24 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-
+    private var forumList:List<Forum_List> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val appSettingsPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs",Context.MODE_PRIVATE)
-        val sharedPrefsEdit: SharedPreferences.Editor= appSettingsPrefs.edit()
-        val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode",false)
 
+        val appSettingsPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs",
+            Context.MODE_PRIVATE)
+        val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode",true)
         if(isNightModeOn)
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            main_light_night_button.text=getString(R.string.main_activity_night_mode_on)
+            main_light_night_button.text=getString(R.string.main_activity_light_mode_on)
         }
         else
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            main_light_night_button.text=getString(R.string.main_activity_light_mode_on)
-
+            main_light_night_button.text=getString(R.string.main_activity_night_mode_on)
         }
     }
 
@@ -62,9 +60,10 @@ class MainActivity : AppCompatActivity() {
     }
     fun LightNightMode(v:View)
    {
-       val appSettingsPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs",Context.MODE_PRIVATE)
+       val appSettingsPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs",
+           Context.MODE_PRIVATE)
        val sharedPrefsEdit: SharedPreferences.Editor= appSettingsPrefs.edit()
-       val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode",false)
+       val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode",true)
        if(isNightModeOn)
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -79,11 +78,14 @@ class MainActivity : AppCompatActivity() {
            sharedPrefsEdit.apply()
            main_light_night_button.text=getString(R.string.main_activity_light_mode_on)
 
-
        }
     }
     override fun onBackPressed() {
         // Do Here what ever you want do on back press;
+    }
+    private fun loadPostData()
+    {
+
     }
 
 }

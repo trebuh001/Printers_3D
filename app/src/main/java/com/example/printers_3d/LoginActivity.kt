@@ -1,7 +1,9 @@
 package com.example.printers_3d
+import android.content.Context
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -16,14 +18,15 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
     val TAG="Login TAG"
-    private val mAuth: FirebaseAuth= FirebaseAuth.getInstance()
+    lateinit var appSettingsPrefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        appSettingsPrefs= getSharedPreferences("AppSettingPrefs", Context.MODE_PRIVATE)
     }
 
 
-
+    private val mAuth: FirebaseAuth= FirebaseAuth.getInstance()
     fun LoginButton(view: View)
     {
         val email:String=Et_email_login.text?.trim().toString()
@@ -39,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful)
                 {
+
                     val intent= Intent(this, UserSettingsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -96,7 +100,6 @@ class LoginActivity : AppCompatActivity() {
             Et_email_login.setError(getString(R.string.field_cant_be_empty))
             Et_email_login.requestFocus()
             i++
-
 
         }
         if(password.trim().isEmpty())

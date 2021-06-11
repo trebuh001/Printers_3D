@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MarketThreadActivity"
+    android:background="@drawable/gradient_primary_background"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/Progress_bar_market_thread"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        />
+    <EditText
+        android:id="@+id/Et_new_post_description_market"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_edittext"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:gravity="top|start"
+        android:hint="@string/hint_enter_description_new_thread"
+        android:inputType="textMultiLine"
+        android:maxLength="30000"
+        android:maxLines="5"
+        android:minLines="1"
+        android:scrollbars="vertical"
+        android:textColor="@color/text_standard_color"
+        android:textSize="@dimen/text_size_medium_size" />
+
+    <TextView
+        android:id="@+id/TV_picture_names_post_market"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+
+        android:textColor="@color/text_standard_color"
+        android:textSize="@dimen/text_size_medium_size"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:singleLine="false"
+        android:text=""/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_standard_color"
+            android:textSize="20sp"
+            android:text="@string/new_thread_add_image"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:textStyle="bold"
+
+            />
+        <ImageView
+            android:id="@+id/btn_add_image_market"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:background="@drawable/picture"
+            android:onClick="AddPictureButton"/>
+        <Button
+            android:id="@+id/save_thread_forum"
+            android:onClick="SaveThreadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_buttons"
+            android:textSize="20sp"
+            android:textColor="@color/text_standard_color"
+            android:text="@string/save_post"
+            android:background="@color/background_button"
+            />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

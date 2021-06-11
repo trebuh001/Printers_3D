@@ -2,8 +2,10 @@ package com.example.printers_3d
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -11,11 +13,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputType
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -26,17 +31,21 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_user_settings.*
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 @Suppress("DEPRECATION")
 class UserSettingsActivity : AppCompatActivity() {
-    val TAG="User Settings TAG"
+    val TAG="UserSettings TAG"
     private lateinit var imageUri: Uri
     private  val REQUEST_IMAGE_CAPTURE=100
     private  val PICK_IMAGE_REQUEST=123
+    var old_nickname=""
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    lateinit var appSettingsPrefs: SharedPreferences
 
 // ...
     companion object {
@@ -48,18 +57,37 @@ class UserSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_settings)
+        appSettingsPrefs= getSharedPreferences("AppSettingPrefs",
+            Context.MODE_PRIVATE)
         val database = Firebase.database.reference
-
+        val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode",true)
+        if(isNightModeOn)
+        {
+            IV_edit_name_confirm.setImageResource(R.drawable.confirm_bright)
+            IV_logout.setImageResource(R.drawable.logout_bright)
+            IV_settings.setImageResource(R.drawable.settings_bright)
+        }
+        else
+        {
+            IV_edit_name_confirm.setImageResource(R.drawable.confirm)
+            IV_logout.setImageResource(R.drawable.logout)
+            IV_settings.setImageResource(R.drawable.settings)
+        }
         Progress_bar_user_settings.visibility= View.VISIBLE
+
         val ordersRef = database.child("Users").orderByKey().equalTo(FirebaseAuth.getInstance().uid.toString())
         val valueEventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
+            override fun onDataChange(dataSnapshot: DataSnapshot)
+            {
                 for (ds in dataSnapshot.children) {
+                    val sharedPrefsEdit: SharedPreferences.Editor= appSettingsPrefs.edit()
+                    sharedPrefsEdit.putString("username",ds.child("name").getValue(String::class.java))
+                    sharedPrefsEdit.apply()
                     TV_user_name_database.setText(ds.child("name").getValue(String::class.java))
                     TV_user_email_database.text= ds.child("email").getValue(String::class.java)
+                    old_nickname=TV_user_name_database.text.toString()
                     Et_user_description_database.setText(
                         ds.child("description").getValue(String::class.java)
-
                     )
                     //Log.d(TAG, username)
                     Progress_bar_user_settings.visibility= View.GONE
@@ -74,12 +102,10 @@ class UserSettingsActivity : AppCompatActivity() {
         ordersRef.addListenerForSingleValueEvent(valueEventListener)
 
 
-
-
       Progress_bar_user_photo.visibility=View.VISIBLE
         val imageView = findViewById<ImageView>(R.id.IV_user_photo)
         // Reference to an image file in Cloud Storage
-        val storageRef= Firebase.storage.reference.child("UserPhotoPictures").
+        val storageRef= Firebase.storage.reference.child("UserPhotoPictures").child("Thumbnails").
         child(FirebaseAuth.getInstance().uid.toString())
         storageRef.downloadUrl.addOnSuccessListener { Uri ->
             val imageURL = Uri.toString()
@@ -91,10 +117,7 @@ class UserSettingsActivity : AppCompatActivity() {
         }
         Progress_bar_user_photo.visibility=View.INVISIBLE
 
-
-}
-
-
+    }
 
     fun GoForumButton(view: View)
     {
@@ -112,6 +135,14 @@ class UserSettingsActivity : AppCompatActivity() {
         }
 
     }
+    fun UserPhotoOpenBig(view: View)
+    {
+
+        val intent= Intent(this,BigPictureActivity::class.java)
+        intent.putExtra("BigAvatarFromUserSettings",FirebaseAuth.getInstance().uid.toString())
+        startActivity(intent)
+    }
+
 
     fun ChangeAvatarButton(view: View) {
 
@@ -135,7 +166,6 @@ class UserSettingsActivity : AppCompatActivity() {
                         }
                     }
                     else{
-                        //system OS is < Marshmallow
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "image/*"
                         startActivityForResult(intent, IMAGE_PICK_CODE)
@@ -151,22 +181,31 @@ class UserSettingsActivity : AppCompatActivity() {
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
                     Progress_bar_user_photo.visibility=View.VISIBLE
-                    val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").
+                    DeleteDataWithAvatarLinkToThread()
+                    val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("Thumbnails").
+                    child(FirebaseAuth.getInstance().uid.toString())
+                    val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
                     child(FirebaseAuth.getInstance().uid.toString())
                         storageRef.delete().addOnSuccessListener {
-                            Toast.makeText(this,getString(R.string.avatar_restoring_default_success),Toast.LENGTH_LONG).show()
+                           // Toast.makeText(this,getString(R.string.avatar_restoring_default_success),Toast.LENGTH_LONG).show()
+                            storageRefBig.delete().addOnSuccessListener {
+                                Toast.makeText(this,getString(R.string.avatar_restoring_default_success),Toast.LENGTH_LONG).show()
+                            }.addOnFailureListener {
+                                Toast.makeText(this,getString(R.string.avatar_restoring_default_error),Toast.LENGTH_LONG).show()
+                            }
                         }.addOnFailureListener {
                             Toast.makeText(this,getString(R.string.avatar_restoring_default_error),Toast.LENGTH_LONG).show()
 
                         }
+
+
                     Progress_bar_user_photo.visibility=View.GONE
-                    this.finish()
-                    startActivity(getIntent())
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
 
                 }
-
-
-
             }
         }
 
@@ -175,15 +214,15 @@ class UserSettingsActivity : AppCompatActivity() {
         setPositiveButton(getString(R.string.avatar_dialog_interface_button_set_from_device_storage), dialogClickListener)
             .setNegativeButton(getString(R.string.avatar_dialog_interface_button_set_from_camera), dialogClickListener)
             .setNeutralButton(getString(R.string.avatar_dialog_interface_button_set_default),dialogClickListener).show()
-
-          /* val intent=Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { pictureIntent ->
-         pictureIntent.resolveActivity(this.packageManager!!).also{
-             startActivityForResult(pictureIntent, REQUEST_IMAGE_CAPTURE)
-         }
-
-        }    Read from camera   */
-
-
+    }
+    fun CheckCharacters(string: String): Boolean {
+        for (check in string)
+        {
+            if (check !in 'A'..'Z' && check !in 'a'..'z' && check !in '0'..'9' && check !in '_'..'_') {
+                return false
+            }
+        }
+        return true
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -202,7 +241,7 @@ class UserSettingsActivity : AppCompatActivity() {
 
                 } else {
                     //permission from popup denied
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -215,15 +254,20 @@ class UserSettingsActivity : AppCompatActivity() {
             val imageUrii =data?.data as Uri
             val imageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
             val baos=ByteArrayOutputStream()
-            val resizedBitmap:Bitmap?=getResizedBitmap(imageBitmap, 128, 128)
+            val resizedBitmap:Bitmap?=getResizedBitmap(imageBitmap, 102, 136) //96 128
             resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-
-            val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").
+            val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("Thumbnails").
             child(FirebaseAuth.getInstance().uid.toString())
-          //  imageBitmap.compress(Bitmap.CompressFormat.PNG,100,baos)
-
-            val image= baos.toByteArray()
-            val upload=storageRef.putBytes(image)
+            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+            val baosBig=ByteArrayOutputStream()
+            val resizedBitmapBig:Bitmap?=getResizedBitmap(imageBitmapBig, 780, 1040)
+            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+            val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+            child(FirebaseAuth.getInstance().uid.toString())
+            val imageThumbnail= baos.toByteArray()
+            val upload=storageRef.putBytes(imageThumbnail)
+            val imageBigPicture = baosBig.toByteArray()
+            val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
             Progress_bar_user_photo.visibility=View.VISIBLE
             upload.addOnCompleteListener{ task->
                 Progress_bar_user_photo.visibility=View.INVISIBLE
@@ -237,6 +281,20 @@ class UserSettingsActivity : AppCompatActivity() {
                         }
 
                     }
+                    uploadBigPicture.addOnCompleteListener{ task->
+                        Progress_bar_user_photo.visibility=View.INVISIBLE
+                        if(task.isSuccessful)
+                        {
+
+                        }
+                        else
+                        {
+                            task.exception?.let{
+                                Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                    UpdateDataWithAvatarLinkToThread()
                 }
                 else
                 {
@@ -246,6 +304,7 @@ class UserSettingsActivity : AppCompatActivity() {
                 }
             }
 
+
         }  // take from gallery
 
 
@@ -253,12 +312,20 @@ class UserSettingsActivity : AppCompatActivity() {
         {
             val imageBitmap =data?.extras?.get("data") as Bitmap
             val baos=ByteArrayOutputStream()
-            val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").
+            val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("Thumbnails").
             child(FirebaseAuth.getInstance().uid.toString())
-            val resizedBitmap:Bitmap?=getResizedBitmap(imageBitmap, 128, 128)
+            val resizedBitmap:Bitmap?=getResizedBitmap(imageBitmap, 102, 136)//96 128
             resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            val image= baos.toByteArray()
-            val upload=storageRef.putBytes(image)
+            val imageBitmapBig = data?.extras?.get("data") as Bitmap
+            val baosBig=ByteArrayOutputStream()
+            val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+            child(FirebaseAuth.getInstance().uid.toString())
+            val resizedBitmapBig:Bitmap?=getResizedBitmap(imageBitmapBig, 780, 1040)
+            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+            val imageThumbnail= baos.toByteArray()
+            val upload=storageRef.putBytes(imageThumbnail)
+            val imageBigPicture = baosBig.toByteArray()
+            val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
             Progress_bar_user_photo.visibility=View.VISIBLE
             upload.addOnCompleteListener{ task->
                 Progress_bar_user_photo.visibility=View.INVISIBLE
@@ -270,9 +337,21 @@ class UserSettingsActivity : AppCompatActivity() {
                            // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
                             IV_user_photo.setImageBitmap(resizedBitmap)
                         }
-
-
                     }
+                    uploadBigPicture.addOnCompleteListener{ task->
+                        Progress_bar_user_photo.visibility=View.INVISIBLE
+                        if(task.isSuccessful)
+                        {
+
+                        }
+                        else
+                        {
+                            task.exception?.let{
+                                Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                    UpdateDataWithAvatarLinkToThread()
                 }
                 else
                 {
@@ -301,35 +380,486 @@ class UserSettingsActivity : AppCompatActivity() {
         bm.recycle()
         return resizedBitmap
     }
+
+    fun EditName()
+    {
+        FirebaseDatabase.getInstance().getReference("Users")
+            .child(FirebaseAuth.getInstance().uid.toString()).child("name").
+            setValue(TV_user_name_database.text.toString())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Name in profile updated successfully.")
+                    Toast.makeText(
+                        this,
+                        getString(R.string.name_profile_changed_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    UpdateNameInPosts(TV_user_name_database.text.toString())
+                    val intent= Intent(this, UserSettingsActivity::class.java)
+                    this.finish()
+                    startActivity(intent)
+                }
+                else
+                {
+                    Log.d(TAG, "User re-authenticated.")
+                    Toast.makeText(
+                        this,
+                        getString(R.string.name_profile_changed_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+            }
+    }
+    fun UpdateDataWithAvatarLinkToThread()
+    {
+        val storageRef= Firebase.storage.reference.child("UserPhotoPictures").child("Thumbnails").
+        child(FirebaseAuth.getInstance().uid.toString())
+        storageRef.downloadUrl.addOnSuccessListener { task ->
+            val imageURL = task.toString()
+            UpdateAvatarsInPosts(imageURL)
+            //Toast.makeText(applicationContext,imageURL,Toast.LENGTH_LONG).show()
+        }.addOnFailureListener {
+            // Handle any errors
+        }
+    }
+    fun DeleteDataWithAvatarLinkToThread()
+    {
+        val storageRef= Firebase.storage.reference.child("UserPhotoPictures").child("Thumbnails").
+        child(FirebaseAuth.getInstance().uid.toString())
+        storageRef.downloadUrl.addOnSuccessListener { task ->
+            DeleteAvatarsInPosts()
+            //Toast.makeText(applicationContext,imageURL,Toast.LENGTH_LONG).show()
+        }.addOnFailureListener {
+            // Handle any errors
+        }
+    }
+    fun UpdateAvatarInPost(postID:String,subPage: String, imageURL:String)
+    {
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(subPage).child(postID).child("avatar").
+            setValue(imageURL)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    Log.d(TAG, "Successful")
+                }
+                else
+                {
+                    Log.d(TAG, "Failed")
+                }
+            }
+    }
+    fun UpdateAvatarInPost(postID:String,subPage: String, imageURL:String, postIDChild: String)
+    {
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(subPage).child(postID).child(postIDChild)
+            .child("avatar")
+            .setValue(imageURL)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    Log.d(TAG, "Successful")
+                }
+                else
+                {
+                    Log.d(TAG, "Failed")
+                }
+            }
+    }
+    fun UpdateNameInPost(postID:String,subPage: String, name:String)
+    {
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(subPage).child(postID).child("name").
+            setValue(name)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    Log.d(TAG, "Successful")
+                }
+                else
+                {
+                    Log.d(TAG, "Failed")
+                }
+            }
+    }
+    fun DeleteAvatarInPost(postID:String,subPage: String)
+    {
+        val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+            .child(subPage).child(postID).child("avatar")
+        deleteRef.removeValue();
+    }
+    fun DeleteAvatarInPost(postID:String,subPage: String,postIDChild: String)
+    {
+        val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+            .child(subPage).child(postID).child(postIDChild).child("avatar")
+        deleteRef.removeValue();
+    }
+    fun DeleteAvatarsInPosts()
+    {
+        val database = Firebase.database.reference
+        val ordersRef = database.child("Posts").child("Forum").orderByValue()
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        DeleteAvatarInPost(postID,"Forum")
+                        val ordersRef0 = database.child("Posts").child("Forum")
+                            .child(postID)
+                            .orderByValue()
+                        val valueEventListener0 = object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (ds2 in dataSnapshot.children) {
+
+                                    if (ds2.child("user_id").getValue(String::class.java).toString()
+                                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                                    {
+                                        val postID2=ds2.key.toString()
+                                        DeleteAvatarInPost(postID,"Forum",postID2)
+
+                                    }
+                                }
+                            }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                            }
+                        }
+                        ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+                    }
+
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef.addListenerForSingleValueEvent(valueEventListener)
+
+        val ordersRef2 = database.child("Posts").child("Market").orderByValue()
+        val valueEventListener2 = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        DeleteAvatarInPost(postID,"Market")
+                        val ordersRef0 = database.child("Posts").child("Market")
+                            .child(postID)
+                            .orderByValue()
+                        val valueEventListener0 = object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (ds2 in dataSnapshot.children) {
+
+                                    if (ds2.child("user_id").getValue(String::class.java).toString()
+                                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                                    {
+                                        val postID2=ds2.key.toString()
+                                        DeleteAvatarInPost(postID,"Market",postID2)
+
+                                    }
+                                }
+                            }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                            }
+                        }
+                        ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef2.addListenerForSingleValueEvent(valueEventListener2)
+
+        val ordersRef3 = database.child("Posts").child("Projects").orderByValue()
+        val valueEventListener3 = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        DeleteAvatarInPost(postID,"Projects")
+
+                        val ordersRef0 = database.child("Posts").child("Projects")
+                            .child(postID)
+                            .orderByValue()
+                        val valueEventListener0 = object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (ds2 in dataSnapshot.children) {
+
+                                    if (ds2.child("user_id").getValue(String::class.java).toString()
+                                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                                    {
+                                        val postID2=ds2.key.toString()
+                                        DeleteAvatarInPost(postID,"Projects",postID2)
+
+                                    }
+                                }
+                            }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                            }
+                        }
+                        ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+                    }
+
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef3.addListenerForSingleValueEvent(valueEventListener3)
+    }
+
+    fun UpdateNameInPosts(name: String)
+    {
+        val database = Firebase.database.reference
+        val ordersRef = database.child("Posts").child("Forum").orderByValue()
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        UpdateNameInPost(postID,"Forum",name)
+                    }
+
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef.addListenerForSingleValueEvent(valueEventListener)
+
+        val ordersRef2 = database.child("Posts").child("Market").orderByValue()
+        val valueEventListener2 = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        UpdateNameInPost(postID,"Market",name)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef2.addListenerForSingleValueEvent(valueEventListener2)
+
+        val ordersRef3 = database.child("Posts").child("Projects").orderByValue()
+        val valueEventListener3 = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        UpdateNameInPost(postID,"Projects",name)
+                    }
+
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef3.addListenerForSingleValueEvent(valueEventListener3)
+    }
+
+    fun UpdateAvatarsInPosts(imageURL: String)
+    {
+        val database = Firebase.database.reference
+        val ordersRef = database.child("Posts").child("Forum").orderByValue()
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        UpdateAvatarInPost(postID,"Forum",imageURL)
+
+                        val ordersRef0 = database.child("Posts").child("Forum")
+                            .child(postID)
+                            .orderByValue()
+                        val valueEventListener0 = object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (ds2 in dataSnapshot.children) {
+
+                                    if (ds2.child("user_id").getValue(String::class.java).toString()
+                                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                                    {
+                                        val postID2=ds2.key.toString()
+                                        UpdateAvatarInPost(postID,"Forum",imageURL,postID2)
+
+                                    }
+
+
+                                }
+                            }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                            }
+                        }
+                        ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+
+                    }
+
+
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef.addListenerForSingleValueEvent(valueEventListener)
+
+        val ordersRef2 = database.child("Posts").child("Market").orderByValue()
+        val valueEventListener2 = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("user_id").getValue(String::class.java).toString()
+                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                    {
+                        val postID=ds.key.toString()
+                        UpdateAvatarInPost(postID,"Market",imageURL)
+                        val ordersRef0 = database.child("Posts").child("Market")
+                            .child(postID)
+                            .orderByValue()
+                        val valueEventListener0 = object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (ds2 in dataSnapshot.children) {
+
+                                    if (ds2.child("user_id").getValue(String::class.java).toString()
+                                            .equals(FirebaseAuth.getInstance().uid.toString()))
+                                    {
+                                        val postID2=ds2.key.toString()
+                                        UpdateAvatarInPost(postID,"Market",imageURL,postID2)
+
+                                    }
+
+
+                                }
+                            }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                            }
+                        }
+                        ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+            }
+        }
+        ordersRef2.addListenerForSingleValueEvent(valueEventListener2)
+
+    val ordersRef3 = database.child("Posts").child("Projects").orderByValue()
+    val valueEventListener3 = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            for (ds in dataSnapshot.children) {
+
+                if (ds.child("user_id").getValue(String::class.java).toString()
+                        .equals(FirebaseAuth.getInstance().uid.toString()))
+                {
+                    val postID=ds.key.toString()
+                    UpdateAvatarInPost(postID,"Projects",imageURL)
+                    val ordersRef0 = database.child("Posts").child("Projects")
+                        .child(postID)
+                        .orderByValue()
+                    val valueEventListener0 = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (ds2 in dataSnapshot.children) {
+
+                                if (ds2.child("user_id").getValue(String::class.java).toString()
+                                        .equals(FirebaseAuth.getInstance().uid.toString()))
+                                {
+                                    val postID2=ds2.key.toString()
+                                    UpdateAvatarInPost(postID,"Projects",imageURL,postID2)
+
+                                }
+                            }
+                        }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                        }
+                    }
+                    ordersRef0.addListenerForSingleValueEvent(valueEventListener0)
+                }
+
+            }
+        }
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+        }
+    }
+    ordersRef3.addListenerForSingleValueEvent(valueEventListener3)
+}
+    fun CheckNameBusy()
+    {
+        val name:String=TV_user_name_database.text?.trim().toString()
+        Progress_bar_user_settings.visibility= View.VISIBLE
+        val database = Firebase.database.reference
+        val ordersRef = database.child("Users").orderByValue()
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+
+                    if (ds.child("name").getValue(String::class.java).toString()
+                            .toLowerCase(Locale.ROOT)
+                            .equals(name.toLowerCase(Locale.ROOT))&&
+                        ds.child("name").getValue(String::class.java).toString()
+                            .toLowerCase(Locale.ROOT)
+                            !=(old_nickname.toLowerCase(Locale.ROOT)))
+                            {
+                                Progress_bar_user_settings.visibility = View.GONE
+                                TV_user_name_database.setError(getString(R.string.toast_nickname_busy))
+                                TV_user_name_database.requestFocus()
+                                return
+                            }
+
+                }
+                if(!CheckCharacters(name))
+                {
+                    TV_user_name_database.setError(getString(R.string.hint_name_special_characters_error))
+                    TV_user_name_database.requestFocus()
+                    Progress_bar_user_settings.visibility = View.GONE
+                    return
+                }
+                EditName()
+                Progress_bar_user_settings.visibility = View.GONE
+            }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d(TAG, databaseError.getMessage()) //Don't ignore errors!
+                }
+            }
+            ordersRef.addListenerForSingleValueEvent(valueEventListener)
+        }
     fun EditNameButton(view: View)
     {
-
-          FirebaseDatabase.getInstance().getReference("Users")
-              .child(FirebaseAuth.getInstance().uid.toString()).child("name").
-              setValue(TV_user_name_database.text.toString())
-              .addOnCompleteListener { task ->
-                  if (task.isSuccessful) {
-                      Log.d(TAG, "Name in profile updated successfully.")
-                      Toast.makeText(
-                          this,
-                          getString(R.string.name_profile_changed_success),
-                          Toast.LENGTH_SHORT
-                      ).show()
-                      val intent= Intent(this, UserSettingsActivity::class.java)
-                      this.finish()
-                      startActivity(intent)
-                  }
-                  else
-                  {
-                      Log.d(TAG, "User re-authenticated.")
-                      Toast.makeText(
-                          this,
-                          getString(R.string.name_profile_changed_error),
-                          Toast.LENGTH_SHORT
-                      ).show()
-
-                  }
-      }
+            CheckNameBusy()
 
 
     }
@@ -358,11 +888,8 @@ class UserSettingsActivity : AppCompatActivity() {
                         getString(R.string.description_profile_changed_error),
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }
             }
-
-
     }
     fun ChangePasswordButton(view: View)
     {
@@ -374,6 +901,7 @@ class UserSettingsActivity : AppCompatActivity() {
         val intent= Intent(this, ChangeEmailActivity::class.java)
         startActivity(intent)
     }
+
     fun LogoutButton(view: View)
     {
         Toast.makeText(this, getString(R.string.logout_successful), Toast.LENGTH_SHORT).show()

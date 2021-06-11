@@ -19,6 +19,7 @@
     <dimen name="text_size_buttons">35sp</dimen>
     <dimen name="text_size_buttons_smaller">25sp</dimen>
     <dimen name="text_size_edittext_large">30sp</dimen>
+    <dimen name="text_size_big_size">25sp</dimen>
     <dimen name="text_size_medium_size">20sp</dimen>
     <dimen name="text_size_very_small">10sp</dimen>
 

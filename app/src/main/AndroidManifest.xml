@@ -12,14 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
-        <activity android:name=".LoginFacebookActivity"></activity>
-        <activity android:name=".StartForumActivity" />
         <activity
             android:name=".ChangeEmailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".EditPostActivity" />
+        <activity android:name=".UserSettingsShowActivity" />
+        <activity android:name=".MarketThreadActivity" />
+        <activity android:name=".NewThreadProjectsActivity" />
+        <activity android:name=".NewThreadMarketActivity" />
+        <activity android:name=".ForumThreadActivity" />
+        <activity android:name=".BigPictureActivity" />
+        <activity android:name=".NewThreadActivity" />
+        <activity android:name=".StartForumActivity" />
         <activity
             android:name=".ChangePasswordActivity"
             android:screenOrientation="portrait" />

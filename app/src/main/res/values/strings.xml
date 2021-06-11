@@ -3,6 +3,18 @@
     <string name="fb_login_protocol_scheme">fb487729295968039</string>
     <string name="app_name">3DPrinters</string>
 
+    <!-- Others       -->
+    <string name="confirm">confirm</string>
+    <string name="cancel">cancel</string>
+    <string name="enter_text">Enter text</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="prize">Prize</string>
+    <string name="contact">Contact</string>
+    <string name="title">Title</string>
+    <string name="author">Author: </string>
+    <string name="undo_browse">Undo browse data</string>
+    <string name="browser">Browser</string>
+
 
     <!-- MainActivity -->
     <string name="main_activity_title">Blog about 3D Printers</string>
@@ -17,12 +29,14 @@
     <string name="toast_login_success">Login was successful</string>
 
     <!-- RegistrationActivity      -->
-    <string name="hint_name_edittext">Enter user name</string>
+    <string name="toast_nickname_busy">Username is busy, type another one</string>
+    <string name="hint_name_edittext">Enter username</string>
     <string name="registration_activity_register_btn">Register</string>
     <string name="hint_password_edittext_repeat">Repeat password</string>
     <string name="passwords_not_same">Passwords not the same!</string>
     <string name="password_longer_than_12_char">Password is longer than 12 characters!</string>
-    <string name="hint_register_error">Registration Error. User with such an e=mail address already exists</string>
+    <string name="hint_register_error">Registration Error. User with such an e-mail address already exists</string>
+    <string name="hint_name_special_characters_error">Name of user may contain: lowercase, uppercase, numbers and underscore</string>
 
     <!-- UserSettingsActivity      -->
     <string name="user_name">Name:</string>
@@ -58,7 +72,7 @@
 
     <!-- RemindPasswordActivity   -->
     <string name="remind_password">Remind Password</string>
-    <string name="toast_remind_password">E-mail with password recovery instruction has been sent</string>
+    <string name="toast_remind_password">Email with password recovery instruction has been sent</string>
     <string name="error_remind_password">Error. Check if entered email is correct.</string>
 
     <!-- ChangePasswordActivity -->
@@ -75,12 +89,62 @@
     <string name="hint_new_email_repeat">Repeat new email</string>
     <string name="email_changed_success">Email has been changed successfully</string>
     <string name="email_changed_error">Error while changing email</string>
-    <string name="email_profile_changed_success">E-mail in profile has been changed</string>
+    <string name="email_profile_changed_success">Email in profile has been changed</string>
     <string name="email_profile_changed_error">Error while changing email in profile</string>
     <!-- StartForumActivity    -->
     <string name="start_forum_title">Forum</string>
     <string name="new_thread">New thread</string>
     <string name="start_market_title">Market</string>
     <string name="start_projects_title">Projects - Do it yourself</string>
+    <string name="browse_dialog_message">Enter the data to be searched and the kind of data</string>
+    <string name="title_in_threads">Title (in threads)</string>
+    <string name="title_in_posts">Title (in posts)</string>
+    <string name="author_in_threads">Author (in threads)</string>
+    <string name="author_in_posts">Author (in posts)</string>
+    <string name="description_in_threads">Description (in threads)</string>
+    <string name="description_in_posts">Description (in posts)</string>
+    <string name="portal">Portal</string>
+    <!-- NewThreadActivity      -->
+    <string name="hint_enter_title_new_thread">Write title of thread</string>
+    <string name="hint_enter_description_new_thread">Write text of thread</string>
+    <string name="save_thread">Save thread</string>
+    <string name="new_thread_title">Create a new thread</string>
+    <string name="new_thread_add_image">Add a picture</string>
+    <string name="new_thread_dialog_message">Enter a name of the picture you want to add</string>
+    <string name="new_thread_error">Error adding new thread</string>
+    <string name="new_thread_toast_add_picture">Picture has been added</string>
+    <string name="new_thread_toast_add_thread">New thread has been added</string>
+    <string name="empty_filename">Name of file cannot be empty</string>
+    <string name="filename_exist">Name of file already exist</string>
+    <string name="file_special_characters_toast">Name of file may contain: lowercase, uppercase, numbers, underscore and space sign</string>
+    <string name="error_empty_title">Title cannot be empty</string>
+    <string name="error_empty_description">Description cannot be empty</string>
+    <string name="Destination">Destination: </string>
+    <string name="too_many_pictures">Too many pictures (Max. 1)</string>
+    <string name="hint_enter_description_new_thread_market">Write text of thread (description of item, features etc.)</string>
+    <string name="hint_enter_title_new_thread_market">Write name of the item</string>
+    <string name="hint_enter_prize_new_thread_market">Write the price of item(PLN)</string>
+    <string name="hint_enter_contact_new_thread_market">Write contact details</string>
+
+    <!-- ForumThreadActivity  -->
+
+    <string name="save_post">Save Post</string>
+    <string name="choose_one_of_the_options">Choose one of the options</string>
+    <string name="show_big_picture">Show big picture of thumbnail</string>
+    <string name="delete_post_message">Delete post</string>
+    <string name="edit_post_message">Edit post</string>
+    <string name="show_user_profile">Show user profile</string>
+    <string name="foreign_post_author">Permission denied. You did not write this post</string>
+    <string name="description">Description</string>
+    <string name="not_permission_to_delete_thread">Error. The first post in the thread cannot be deleted</string>
+    <string name="not_permission_to_update_thread">Error. The first post in the thread cannot be updated</string>
+    <string name="edited">[Edited]</string>
+
+
+    <!-- ChangeEmail          -->
+
+    <string name="enter_new_email">Enter new email</string>
+    <string name="repeat_new_email">Repeat new email</string>
+    <string name="emails_not_same">Emails not the same</string>
 
 </resources>

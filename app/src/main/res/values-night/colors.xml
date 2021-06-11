@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="recycler_line">#000</color>
-    <color name="colorPrimary">#09AFFA</color>
-    <color name="colorPrimaryDark">#1C7FB8</color>
-    <color name="colorAccent">#FCDA9CE4</color>
-    <color name="background_button">#F0F5F6</color>
-    <color name="text_standard_color">#000000</color>
-    <color name="edittext_start_color">#FAF6F6</color>
-    <color name="edittext_end_color">#E9E7EC</color>
-    <color name="background_primary_start_color">#FFFBFB</color>
-    <color name="background_primary_end_color">#FFFFFF</color>
-
-
+    <!--Dark Mode colors -->
+    <color name="recycler_line">#FFFFFF</color>
+    <color name="colorPrimary">#24153E</color>
+    <color name="colorPrimaryDark">#472295</color>
+    <color name="colorAccent">#9C27B0</color>
+    <color name="background_button">#24153E</color>
+    <color name="text_standard_color">#FFF</color>
+    <color name="edittext_start_color">#BDB2B2</color>
+    <color name="edittext_end_color">#595461</color>
+    <color name="background_primary_start_color">#24153E</color>
+    <color name="background_primary_end_color">#472295 </color>
 
 </resources>

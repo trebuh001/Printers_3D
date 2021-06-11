@@ -7,7 +7,25 @@
     tools:context=".StartForumActivity"
     android:background="@drawable/gradient_primary_background"
     android:orientation="vertical">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:weightSum="1"
+        android:background="@drawable/frame"
+        android:gravity="center"
+        >
+    <Button
+        android:id="@+id/btn_loupe"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_buttons"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_buttons"
+        android:background="@drawable/loupe"
+        android:onClick="Browser"/>
     <TextView
         android:id="@+id/txt_forum_title"
         android:layout_width="match_parent"
@@ -17,16 +35,33 @@
         android:textColor="@color/text_standard_color"
         android:textSize="@dimen/text_size_titles"
         android:fontFamily="@font/magnolia_script"
-        android:layout_marginTop="@dimen/margin_top_title"
         android:textStyle="bold"
+
         android:layout_marginHorizontal="20dp"
         />
-
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/Progress_bar_start_forum"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:id="@+id/txt_start_forum_browse_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:text=""
+        android:textColor="@color/text_standard_color"
+        android:textSize="12sp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginHorizontal="10dp"
         android:weightSum="1"
         android:background="@drawable/frame"
@@ -82,6 +117,8 @@
             android:layout_marginVertical="5dp"
             android:onClick="NewThread"/>
     </LinearLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"

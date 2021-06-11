@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.Btn_show_pass
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_user_settings.*
+import java.util.*
 
 
 class RegistrationActivity : AppCompatActivity() {
@@ -36,13 +37,13 @@ class RegistrationActivity : AppCompatActivity() {
         val name:String=Et_name_registration.text?.trim().toString()
         Progress_bar_registration.visibility= View.VISIBLE
         val database = Firebase.database.reference
-        var a=0
         val ordersRef = database.child("Users").orderByValue()
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (ds in dataSnapshot.children) {
 
-                    if(ds.child("name").getValue(String::class.java).toString().equals(name))
+                    if(ds.child("name").getValue(String::class.java).toString().toLowerCase(Locale.ROOT)
+                            .equals(name.toLowerCase(Locale.ROOT)))
                     {
                         Progress_bar_registration.visibility= View.GONE
                         Et_name_registration.setError(getString(R.string.toast_nickname_busy))
@@ -60,7 +61,15 @@ class RegistrationActivity : AppCompatActivity() {
         }
         ordersRef.addListenerForSingleValueEvent(valueEventListener)
     }
-
+    fun CheckCharacters(string: String): Boolean {
+        for (check in string)
+        {
+            if (check !in 'A'..'Z' && check !in 'a'..'z' && check !in '0'..'9'  && check !in '_'..'_') {
+                return false
+            }
+        }
+        return true
+    }
     fun RegistrationButton(view: View)
     {
         CheckNameBusy()
@@ -88,7 +97,6 @@ class RegistrationActivity : AppCompatActivity() {
                         Progress_bar_registration.visibility= View.VISIBLE
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
-
                         FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().uid.toString()).
                             setValue(User(name, email,description)).addOnCompleteListener(this) { task ->
@@ -110,20 +118,12 @@ class RegistrationActivity : AppCompatActivity() {
                                     Toast.makeText(this,getString(R.string.registration_error),Toast.LENGTH_LONG).show();
                                     Progress_bar_registration.visibility= View.GONE
                                 }
-
-
                             }
-                        // val user = auth.currentUser
-
                     } else {
                         Progress_bar_registration.visibility= View.GONE
-                        // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(this, getString(R.string.hint_register_error), Toast.LENGTH_SHORT).show()
-                        //   updateUI(null)
                     }
-
-                    // ...
                 }
 
         }
@@ -172,12 +172,17 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     fun CheckFields(name: String, email: String, password: String, password_repeat: String):Boolean
-
     {
         var i=0;
         if(name.trim().isEmpty())
         {
             Et_name_registration.setError(getString(R.string.field_cant_be_empty))
+            Et_name_registration.requestFocus()
+            i++
+        }
+        if(!CheckCharacters(name))
+        {
+            Et_name_registration.setError(getString(R.string.hint_name_special_characters_error))
             Et_name_registration.requestFocus()
             i++
         }
@@ -224,6 +229,8 @@ class RegistrationActivity : AppCompatActivity() {
             Et_email_registration.requestFocus()
             i++
         }
+        if(i>0)
+            Progress_bar_registration.visibility= View.GONE
         return i>0
     }
 }

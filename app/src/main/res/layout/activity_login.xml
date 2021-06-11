@@ -59,7 +59,7 @@
         android:hint="@string/hint_password_edittext"
         android:background="@drawable/gradient_edittexts"
         android:inputType="textPassword"
-        android:maxLength="16"
+        android:maxLength="18"
         />
         <ImageView
             android:id="@+id/Btn_show_pass"

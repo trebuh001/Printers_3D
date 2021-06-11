@@ -4,7 +4,17 @@
     <string name="fb_login_protocol_scheme">fb487729295968039</string>
     <string name="app_name">3DPrinters</string>
 
-
+    <!-- Others       -->
+    <string name="confirm">potwierdź</string>
+    <string name="cancel">anuluj</string>
+    <string name="enter_text">Wprowadź tekst</string>
+    <string name="permission_denied">Odmowa dostępu</string>
+    <string name="prize">Cena</string>
+    <string name="contact">Kontakt</string>
+    <string name="title">Tytuł</string>
+    <string name="author">Autor</string>
+    <string name="undo_browse">Cofnij  wyszukiwanie danych</string>
+    <string name="browser">Wyszukiwarka</string>
     <!-- MainActivity -->
     <string name="main_activity_title">Blog o drukarkach 3D</string>
     <string name="main_activity_login">Logowanie</string>
@@ -18,12 +28,14 @@
     <string name="toast_login_success">Logowanie przebiegło pomyślnie</string>
 
     <!-- RegistrationActivity    -->
+    <string name="toast_nickname_busy">Nazwa użytkownika jest zajęta, wpisz inną</string>
     <string name="hint_name_edittext">Podaj nazwę użytk.</string>
     <string name="registration_activity_register_btn">Zarejestruj</string>
     <string name="hint_password_edittext_repeat">Powtórz hasło</string>
     <string name="passwords_not_same">Hasła nie są takie same!</string>
     <string name="password_longer_than_12_char">Hasło jest dłuższe niż 12 znaków!</string>
     <string name="hint_register_error">Błąd Rejestracji. Użytk. z takim adresem e-mail już istnieje</string>
+    <string name="hint_name_special_characters_error">Nazwa użytkownika może zawierać: małe litery, duże litery, cyfry oraz znak podkreślenia</string>
 
 
 
@@ -48,7 +60,7 @@
     <string name="field_cant_be_empty">Pole nie może być puste!</string>
     <string name="edit_name_confirm">Potwierdź edycję nazwy</string>
     <string name="invalid_email_password">Nieprawidłowy login lub hasło. Spróbuj jeszcze raz. </string>
-    <string name="avatar_dialog_interface_message">Co chcesz zrobić ze swoim obrazkiem profilowym</string>
+    <string name="avatar_dialog_interface_message">Co chcesz zrobić ze swoim obrazkiem profilowym?</string>
     <string name="avatar_dialog_interface_button_set_from_camera">Ustaw obrazek za pomocą aparatu</string>
     <string name="avatar_dialog_interface_button_set_from_device_storage">Ustaw obrazek z pamięci urządzenia</string>
     <string name="avatar_dialog_interface_button_set_default">Ustaw domyślny obrazek</string>
@@ -85,6 +97,54 @@
     <string name="start_forum_title">Forum</string>
     <string name="new_thread">Nowy wątek</string>
     <string name="start_market_title">Targowisko</string>
+    <string name="browse_dialog_message">Podaj dane do wyszukiwania oraz ich typ</string>
+    <string name="title_in_threads">Tytuł (w wątkach)</string>
+    <string name="title_in_posts">Tytuł (w postach)</string>
+    <string name="author_in_threads">Autor (w wątkach)</string>
+    <string name="author_in_posts">Autor (w postach)</string>
+    <string name="description_in_threads">Opis (w wątkach)</string>
+    <string name="description_in_posts">Opis (w postach)</string>
     <string name="start_projects_title">Projekty - zrób to sam</string>
+    <string name="portal">Portal</string>
+    <!-- NewThreadActivity      -->
+    <string name="hint_enter_title_new_thread">Wpisz tytuł wątku</string>
+    <string name="hint_enter_description_new_thread">Wpisz tekst wątku</string>
+    <string name="save_thread">Zapisz wątek</string>
+    <string name="new_thread_title">Stwórz nowy wątek</string>
+    <string name="new_thread_add_image">Dodaj obrazek</string>
+    <string name="new_thread_dialog_message">Podaj nazwę obrazka, który chcesz dodać</string>
+    <string name="new_thread_error">Error adding new thread</string>
+    <string name="new_thread_toast_add_picture">Obrazek został dodany</string>
+    <string name="new_thread_toast_add_thread">Nowy wątek został dodany</string>
+    <string name="empty_filename">Nazwa pliku nie może być pusta</string>
+    <string name="filename_exist">Nazwa pliku już istnieje</string>
+    <string name="file_special_characters_toast">Nazwa użytkownika może zawierać: małe litery, duże litery, cyfry, znak podkreślenia oraz spacji</string>
+    <string name="error_empty_title">Tytuł nie może być pusty</string>
+    <string name="error_empty_description">Opis nie może być pusty</string>
+    <string name="Destination">Przeznaczenie </string>
+    <string name="too_many_pictures">Too many pictures (Maks. 1)</string>
+    <string name="hint_enter_description_new_thread_market">Wpisz tekst wątku (opis przedmiotu, cechy itd.)</string>
+    <string name="hint_enter_title_new_thread_market">Podaj nazwę przedmiotu</string>
+    <string name="hint_enter_prize_new_thread_market">Podaj cenę przedmiotu(PLN)</string>
+    <string name="hint_enter_contact_new_thread_market">Podaj dane kontaktowe</string>
 
+    <!-- ForumThreadActivity  -->
+
+    <string name="save_post">Zapisz Post</string>
+    <string name="choose_one_of_the_options">Wybierz jedną z opcji</string>
+    <string name="show_big_picture">Pokaż duży obrazek miniatury</string>
+    <string name="delete_post_message">Usuń post</string>
+    <string name="edit_post_message">Edytuj post</string>
+    <string name="show_user_profile">Pokaż profil użytkownika</string>
+    <string name="foreign_post_author">Odmowa dostępu. Nie ty napisałeś tego posta</string>
+    <string name="description">Opis</string>
+    <string name="not_permission_to_delete_thread">Błąd. Nie można usunąć pierwszego posta w wątku</string>
+    <string name="not_permission_to_update_thread">Błąd. Nie można edytować pierwszego posta w wątku</string>
+    <string name="edited">[Edytowano]</string>
+
+    <!-- ChangeEmail          -->
+
+    <string name="enter_new_email">Podaj nowy email</string>
+    <string name="repeat_new_email">Powtórz nowy email</string>
+    <string name="emails_not_same">Emaile nie są takie same</string>
 </resources>

@@ -35,7 +35,6 @@ class ChangePasswordActivity : AppCompatActivity() {
         if (check_fields) {
             return
         }
-
         if (new_password.equals(new_password_repeat))
         {
             Progress_bar_change_pass.visibility= View.VISIBLE
@@ -145,8 +144,6 @@ class ChangePasswordActivity : AppCompatActivity() {
             Et_email_change_pass.setError(getString(R.string.field_cant_be_empty))
             Et_email_change_pass.requestFocus()
             i++
-
-
         }
         if(old_password.trim().isEmpty())
         {

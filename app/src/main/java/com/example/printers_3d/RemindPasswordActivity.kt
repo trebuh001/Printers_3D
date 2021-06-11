@@ -31,29 +31,29 @@ class RemindPasswordActivity : AppCompatActivity() {
 
         }
         Progress_bar_remind.visibility= View.VISIBLE
+
+        val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
         if(Locale.getDefault().getLanguage()=="pl")
         {
             mAuth.setLanguageCode("pl")
-
+        }
+        else
+        {
+            mAuth.setLanguageCode("en")
         }
         mAuth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
-                    Toast.makeText(this,getString(R.string.toast_remind_password),Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,getString(R.string.toast_remind_password),
+                        Toast.LENGTH_LONG).show()
                     Et_email_remind.getText().clear()
-                    Log.d(TAG, "Email sent.")
-                    Progress_bar_remind.visibility= View.GONE
                 }
                 else
                 {
-                    Toast.makeText(this,getString(R.string.error_remind_password),Toast.LENGTH_LONG).show()
-                    Progress_bar_remind.visibility= View.GONE
-
+                    Toast.makeText(this,getString(R.string.error_remind_password),
+                        Toast.LENGTH_LONG).show()
                 }
-
             }
-        Progress_bar_remind.visibility= View.GONE
     }
 
     fun CheckFields(email: String):Boolean

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/market_new_thread_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewThreadMarketActivity"
+    android:background="@drawable/gradient_primary_background"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/gradient_primary_background">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_thread_title"
+            android:gravity="center_horizontal"
+            android:textColor="@color/text_standard_color"
+            android:textSize="@dimen/text_size_titles"
+            android:fontFamily="@font/magnolia_script"
+            android:layout_marginTop="@dimen/margin_top_title"
+            android:textStyle="bold"
+            />
+
+        <ProgressBar
+            android:id="@+id/Progress_bar_new_thread"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_new_thread_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_standard_color"
+            android:textSize="@dimen/text_size_big_size"
+            android:text="@string/Destination"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            />
+
+        <EditText
+            android:id="@+id/Et_new_thread_title"
+            android:padding="@dimen/padding_text_primary"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:layout_marginTop="@dimen/margin_bottom_title"
+            android:textSize="@dimen/text_size_edittext_large"
+            android:textColor="@color/text_standard_color"
+            android:hint="@string/hint_enter_title_new_thread_market"
+            android:background="@drawable/gradient_edittexts"
+            android:maxLength="50"
+            />
+        <EditText
+            android:id="@+id/Et_new_thread_prize"
+            android:padding="@dimen/padding_text_primary"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:layout_marginTop="@dimen/very_small_margin"
+            android:textSize="@dimen/text_size_edittext_large"
+            android:textColor="@color/text_standard_color"
+            android:hint="@string/hint_enter_prize_new_thread_market"
+            android:background="@drawable/gradient_edittexts"
+            android:maxLength="11"
+            />
+
+        <EditText
+            android:id="@+id/Et_new_thread_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:layout_marginTop="@dimen/very_small_margin"
+            android:background="@drawable/gradient_edittexts"
+            android:gravity="top|start"
+            android:hint="@string/hint_enter_description_new_thread_market"
+            android:inputType="textMultiLine"
+            android:lines="10"
+            android:maxLength="30000"
+            android:maxLines="10"
+            android:minLines="10"
+            android:scrollbars="vertical"
+            android:textColor="@color/text_standard_color"
+            android:textSize="@dimen/text_size_medium_size" />
+        <EditText
+            android:id="@+id/Et_new_thread_contact"
+            android:padding="@dimen/padding_text_primary"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:layout_marginTop="@dimen/very_small_margin"
+            android:textSize="@dimen/text_size_edittext_large"
+            android:textColor="@color/text_standard_color"
+            android:hint="@string/hint_enter_contact_new_thread_market"
+            android:background="@drawable/gradient_edittexts"
+            android:maxLength="50"
+            />
+
+
+        <TextView
+            android:id="@+id/TV_picture_names"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+            android:layout_marginTop="@dimen/very_small_margin"
+            android:textColor="@color/text_standard_color"
+            android:textSize="@dimen/text_size_medium_size"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:singleLine="false"
+            android:text=""/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_standard_color"
+                android:textSize="@dimen/text_size_big_size"
+                android:text="@string/new_thread_add_image"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_multiline"
+                android:textStyle="bold"
+                />
+            <ImageView
+                android:id="@+id/btn_add_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:background="@drawable/picture"
+                android:onClick="AddPictureButton"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/save_thread_market"
+            android:onClick="SaveThreadButton"
+            android:padding="@dimen/padding_text_primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_buttons"
+            android:layout_marginTop="@dimen/margin_bottom_title"
+            android:textSize="@dimen/text_size_buttons_smaller"
+            android:textColor="@color/text_standard_color"
+            android:text="@string/save_thread"
+            android:background="@color/background_button"
+            />
+
+
+    </LinearLayout>
+
+</ScrollView>
