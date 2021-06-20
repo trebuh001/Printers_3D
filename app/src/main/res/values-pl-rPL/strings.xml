@@ -116,6 +116,7 @@
     <string name="new_thread_error">Error adding new thread</string>
     <string name="new_thread_toast_add_picture">Obrazek został dodany</string>
     <string name="new_thread_toast_add_thread">Nowy wątek został dodany</string>
+    <string name="new_thread_toast_edit_thread">Wątek został pomyślnie edytowany</string>
     <string name="empty_filename">Nazwa pliku nie może być pusta</string>
     <string name="filename_exist">Nazwa pliku już istnieje</string>
     <string name="file_special_characters_toast">Nazwa użytkownika może zawierać: małe litery, duże litery, cyfry, znak podkreślenia oraz spacji</string>

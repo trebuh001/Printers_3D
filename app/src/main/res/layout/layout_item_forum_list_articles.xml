@@ -57,7 +57,6 @@
 
         <TextView
             android:id="@+id/txt_forum_list_article_title"
-            android:textIsSelectable="true"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.33"
@@ -75,7 +74,6 @@
                 android:layout_weight="0.33"
                 android:text="@string/user_name"
                 android:textColor="@color/text_standard_color"
-                android:textIsSelectable="true"
                 android:textStyle="bold"
                 android:paddingVertical="3dp"
                 android:textSize="12sp"

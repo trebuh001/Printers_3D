@@ -115,6 +115,7 @@
     <string name="new_thread_error">Error adding new thread</string>
     <string name="new_thread_toast_add_picture">Picture has been added</string>
     <string name="new_thread_toast_add_thread">New thread has been added</string>
+    <string name="new_thread_toast_edit_thread">Thread has been edited successfully</string>
     <string name="empty_filename">Name of file cannot be empty</string>
     <string name="filename_exist">Name of file already exist</string>
     <string name="file_special_characters_toast">Name of file may contain: lowercase, uppercase, numbers, underscore and space sign</string>

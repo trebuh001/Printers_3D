@@ -29,8 +29,23 @@ class ForumThreadsMarketAdapter (mCtx: Context, val forum_lists : ArrayList<Mark
             txtForumTitle.text= forum_list.title
             txtForumDate.text= forum_list.date
             txt_forum_list_article_dateforum_description.text=forum_list.description
-            txt_forum_list_article_prize_thread.text=itemView.getContext().getString(R.string.prize) +": "+forum_list.prize+ " PLN"
-            txt_forum_list_article_contact_thread.text=itemView.getContext().getString(R.string.contact) +": "+forum_list.contact
+            if(forum_list.prize=="")
+            {
+                txt_forum_list_article_prize_thread.text=""
+            }
+            if(forum_list.contact=="")
+            {
+                txt_forum_list_article_contact_thread.text=""
+            }
+            if(forum_list.prize!="")
+            {
+                txt_forum_list_article_prize_thread.text = itemView.getContext()
+                    .getString(R.string.prize) + ": " + forum_list.prize + " PLN"
+            }
+            if(forum_list.contact!="")
+            {
+                txt_forum_list_article_contact_thread.text = itemView.getContext().getString(R.string.contact) + ": " + forum_list.contact
+            }
 
             if(forum_list.avatar!=null)
             {

@@ -400,6 +400,7 @@ class NewThreadActivity : AppCompatActivity() {
            // i++
     //}
 
+
         SaveDataWithAvatarLinkToThread()
         //SaveTextDataToPost()
         //val ordersRef = database.child("Users").orderByKey().equalTo(FirebaseAuth.getInstance().uid.toString())
@@ -500,14 +501,37 @@ class NewThreadActivity : AppCompatActivity() {
             val imageUrii = data?.data as Uri
             val imageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
             val baos = ByteArrayOutputStream()
-            val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 220, 260) //96 128
-            resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            imageThumbnail.add(baos.toByteArray())
-            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
-            val baosBig = ByteArrayOutputStream()
-            val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            imageBigPicture.add(baosBig.toByteArray())
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 800, 600) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG,100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+
+            }
+            else
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 780, 1040) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG,100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+            }
+
+
             TV_picture_names.setText("")
 
                 TV_picture_names.text=m_text+ ".png"

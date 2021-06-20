@@ -66,7 +66,11 @@ class EditPostActivity : AppCompatActivity() {
     var post_IDParent: String?=null
     var post_IDChild: String?=null
     var post_Description: String?=null
+    var post_Thumbnail : String?=null
+    var post_BigPicture : String?=null
+
     var titleThread: String?=null
+    var post_Position : String="0"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +97,11 @@ class EditPostActivity : AppCompatActivity() {
         post_IDParent = intent.getStringExtra("POST_ID_PARENT").toString()
         post_IDChild = intent.getStringExtra("POST_ID_CHILD").toString()
         post_Description = intent.getStringExtra("POST_DESCRIPTION").toString()
+        if(intent.getStringExtra("POST_THUMBNAIL")!=null && intent.getStringExtra("POST_BIG_PICTURE")!=null)
+        {
+            post_Thumbnail=intent.getStringExtra("POST_THUMBNAIL").toString()
+            post_BigPicture=intent.getStringExtra("POST_BIG_PICTURE").toString()
+        }
         Et_edit_thread_description.setText(post_Description)
         Progress_bar_edit_thread.visibility= View.GONE
     }
@@ -190,43 +199,93 @@ class EditPostActivity : AppCompatActivity() {
     }
 
 
-    fun SendPictureLinkToPost(fileName: String?, pictureSize: String, generatePictureID: String)
+    fun SendPictureLinkToPost(fileName: String?, pictureSize: String)
     {
+        if(post_Thumbnail!=null && post_BigPicture!=null)
+        {
+            val photoRef=
+                FirebaseStorage.getInstance().getReferenceFromUrl(post_Thumbnail.toString())
+            photoRef.delete()
+            val photoRef2=
+                FirebaseStorage.getInstance().getReferenceFromUrl(post_BigPicture.toString())
+            photoRef2.delete()
+        }
 
         // Toast.makeText(applicationContext,portalSubPage+"\n"+generatePostID+"\n"+pictureSize+"\n"+fileName,Toast.LENGTH_LONG).show()
-        val storageRef= Firebase.storage.reference.child("Posts")
-            .child(portalSubPage)
-            .child(post_IDParent.toString())
-            .child(post_IDChild.toString())
-            .child(pictureSize)
-            .child(fileName.toString())
-        storageRef.downloadUrl.addOnSuccessListener { task ->
-            val imageURL = task.toString()
-            SendPictureLinkToPostPart2(imageURL, pictureSize, generatePictureID)
+     /*   if(post_Position.toInt()==0)
+        {
+            val storageRef= Firebase.storage.reference.child("Posts")
+                .child(portalSubPage)
+                .child(post_IDParent.toString())
+                .child(pictureSize)
+                .child(fileName.toString())
+            storageRef.downloadUrl.addOnSuccessListener { task ->
+                val imageURL = task.toString()
+                SendPictureLinkToPostPart2(imageURL, pictureSize, generatePictureID)
 //            Toast.makeText(applicationContext,imageURL,Toast.LENGTH_LONG).show()
-        }.addOnFailureListener {
-            // Handle any errors
-        }
+            }.addOnFailureListener {
+                // Handle any errors
+            }
+        }*/
+      //  else {
+            val storageRef = Firebase.storage.reference.child("Posts")
+                .child(portalSubPage)
+                .child(post_IDParent.toString())
+                .child(post_IDChild.toString())
+                .child(pictureSize)
+                .child(fileName.toString())
+            storageRef.downloadUrl.addOnSuccessListener { task ->
+                val imageURL = task.toString()
+                SendPictureLinkToPostPart2(imageURL, pictureSize)
+//            Toast.makeText(applicationContext,imageURL,Toast.LENGTH_LONG).show()
+            }.addOnFailureListener {
+                // Handle any errors
+            }
+      //  }
+
 
     }
 
-    fun SendPictureLinkToPostPart2(imageURL: String, pictureSize: String, generatePictureID: String)
+    fun SendPictureLinkToPostPart2(imageURL: String, pictureSize: String)
     {
 
         //  Toast.makeText(applicationContext,pictureSize +"\n"+generatePostID,Toast.LENGTH_LONG).show()
-        FirebaseDatabase.getInstance().getReference("Posts")
-            .child(portalSubPage)
-            .child(post_IDParent.toString())
-            .child(post_IDChild.toString())
-            .child(pictureSize)
-            .setValue(imageURL)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
+       /* if(post_Position.toInt()==0)
+        {
+            FirebaseDatabase.getInstance().getReference("Posts")
+                .child(portalSubPage)
+                .child(post_IDParent.toString())
+                .child(pictureSize)
+                .setValue(imageURL)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                    }
+                    else {
+                        Toast.makeText(applicationContext, "error1", Toast.LENGTH_LONG).show()
+                    }
                 }
-                else {
-                    Toast.makeText(applicationContext, "error1", Toast.LENGTH_LONG).show()
+        }*/
+        //else
+       // {
+            FirebaseDatabase.getInstance().getReference("Posts")
+                .child(portalSubPage)
+                .child(post_IDParent.toString())
+                .child(post_IDChild.toString())
+                .child(pictureSize)
+                .setValue(imageURL)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(applicationContext, "", Toast.LENGTH_LONG).show()
+                        val gotoScreenVar = Intent(this, StartForumActivity::class.java)
+                        gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(gotoScreenVar)
+                    }
+                    else {
+                        Toast.makeText(applicationContext, "error1", Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
+     //   }
+
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -277,11 +336,12 @@ class EditPostActivity : AppCompatActivity() {
         {
             Et_edit_thread_description.setError(getString(R.string.error_empty_description))
             Et_edit_thread_description.requestFocus()
-
             return
         }
         Progress_bar_edit_thread.visibility = View.VISIBLE
         var md_busy = true
+
+
 
         val storageRefAuthorFile = FirebaseStorage.getInstance().reference.child("Posts")
             .child(portalSubPage)
@@ -321,36 +381,20 @@ class EditPostActivity : AppCompatActivity() {
                     .child(m_text)
             val uploadBigPicture = storageRefBig.putBytes(imageBigPicture[i])
             upload.addOnCompleteListener { task ->
-
                 if (task.isSuccessful) {
                     uploadBigPicture.addOnCompleteListener { task2 ->
                         //Progress_bar_new_thread.visibility = View.GONE
                         if (task2.isSuccessful) {
-                            var pictureID = MakeIncrementID()
-
-                            GlobalScope.async(Dispatchers.IO) {
-                                val val1 = async {
                                     SendPictureLinkToPost(
-                                        task.result?.storage?.name,
-                                        "Thumbnails",
-                                        pictureID
-                                    )
-                                }
-                                val val2 = async {
+                                        task2.result?.storage?.name,
+                                        "Thumbnails")
                                     SendPictureLinkToPost(
-                                        task.result?.storage?.name,
-                                        "BigPictures",
-                                        pictureID
-                                    )
-                                }
-
-                            }
-
-
-
-                            //Toast.makeText(applicationContext,m_text[i],Toast.LENGTH_LONG).show()
+                                        task2.result?.storage?.name,
+                                        "BigPictures")
+                        }
+                        //Toast.makeText(applicationContext,m_text[i],Toast.LENGTH_LONG).show()
                             // SendPictureLinkToPost(generatePostID,"BigPicture",m_text[i])
-                        } else {
+                        else {
                             task.exception?.let {
                                 Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
                             }
@@ -389,7 +433,7 @@ class EditPostActivity : AppCompatActivity() {
         //  imageBigPicture.clear()
         Toast.makeText(
             applicationContext,
-            getString(R.string.new_thread_toast_add_thread),
+            getString(R.string.new_thread_toast_edit_thread),
             Toast.LENGTH_SHORT
         ).show()
         Progress_bar_edit_thread.visibility = View.GONE
@@ -398,7 +442,8 @@ class EditPostActivity : AppCompatActivity() {
     }
     fun SaveTextDataToPost(imageURL: String)
     {
-
+        Et_edit_thread_description.text.clear()
+        TV_picture_names_edit_post.setText("")
         FirebaseDatabase.getInstance().getReference("Posts")
             .child(portalSubPage)
             .child(post_IDParent.toString())
@@ -407,11 +452,9 @@ class EditPostActivity : AppCompatActivity() {
             .setValue((getString(R.string.edited) + " " + Et_edit_thread_description.text.toString()))
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val gotoScreenVar = Intent(this, StartForumActivity::class.java)
-                    gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(gotoScreenVar)
-
-
+                //    val gotoScreenVar = Intent(this, StartForumActivity::class.java)
+                 //   gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                  //  startActivity(gotoScreenVar)
                 } else {
                     Toast.makeText(this, getString(R.string.new_thread_error), Toast.LENGTH_LONG).show();
                 }
@@ -421,18 +464,49 @@ class EditPostActivity : AppCompatActivity() {
             .setValue(post_IDParent.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-
-
+                } else {
+                    Toast.makeText(this, getString(R.string.new_thread_error), Toast.LENGTH_LONG).show();
+                }
+            }
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(portalSubPage)
+            .child(post_IDParent.toString())
+            .child(post_IDChild.toString())
+            .child("Thumbnails")
+            .setValue("abcdef")
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    //    val gotoScreenVar = Intent(this, StartForumActivity::class.java)
+                    //   gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    //  startActivity(gotoScreenVar)
+                } else {
+                    Toast.makeText(this, getString(R.string.new_thread_error), Toast.LENGTH_LONG).show();
+                }
+            }
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(portalSubPage)
+            .child(post_IDParent.toString())
+            .child(post_IDChild.toString())
+            .child("BigPictures")
+            .setValue(imageURL)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    //    val gotoScreenVar = Intent(this, StartForumActivity::class.java)
+                    //   gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    //  startActivity(gotoScreenVar)
                 } else {
                     Toast.makeText(this, getString(R.string.new_thread_error), Toast.LENGTH_LONG).show();
                 }
             }
 
+
+
     }
 
     fun SaveTextDataToPost()
     {
-
+        TV_picture_names_edit_post.setText("")
+        Et_edit_thread_description.text.clear()
         FirebaseDatabase.getInstance().getReference("Posts")
             .child(portalSubPage)
             .child(post_IDParent.toString())
@@ -441,10 +515,6 @@ class EditPostActivity : AppCompatActivity() {
             .setValue((getString(R.string.edited) + " " + Et_edit_thread_description.text.toString()))
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val gotoScreenVar = Intent(this, StartForumActivity::class.java)
-
-                    gotoScreenVar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(gotoScreenVar)
                 } else {
                     Toast.makeText(this, getString(R.string.new_thread_error), Toast.LENGTH_LONG).show();
                 }
@@ -466,17 +536,44 @@ class EditPostActivity : AppCompatActivity() {
             val imageUrii = data?.data as Uri
             val imageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
             val baos = ByteArrayOutputStream()
-            val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 220, 260) //96 128
-            resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            imageThumbnail.add(baos.toByteArray())
-            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
-            val baosBig = ByteArrayOutputStream()
-            val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            imageBigPicture.add(baosBig.toByteArray())
-            TV_picture_names_post_thread.setText("")
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 800, 600) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(
+                    this.contentResolver,
+                    imageUrii
+                )
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
 
-            TV_picture_names_post_thread.text=m_text+ ".png"
+            }
+            else
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 780, 1040) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(
+                    this.contentResolver,
+                    imageUrii
+                )
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+            }
+            TV_picture_names_edit_post.setText("")
+
+            TV_picture_names_edit_post.text=m_text+ ".png"
             Toast.makeText(
                 applicationContext,
                 getString(R.string.new_thread_toast_add_picture),

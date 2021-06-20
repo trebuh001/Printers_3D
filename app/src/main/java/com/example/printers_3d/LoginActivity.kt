@@ -17,45 +17,43 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
-    val TAG="Login TAG"
+    val TAG = "Login TAG"
     lateinit var appSettingsPrefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        appSettingsPrefs= getSharedPreferences("AppSettingPrefs", Context.MODE_PRIVATE)
+        appSettingsPrefs = getSharedPreferences("AppSettingPrefs", Context.MODE_PRIVATE)
     }
 
 
-    private val mAuth: FirebaseAuth= FirebaseAuth.getInstance()
-    fun LoginButton(view: View)
-    {
-        val email:String=Et_email_login.text?.trim().toString()
-        val password:String=Et_password_login.text?.trim().toString()
-        val check_fields:Boolean=CheckFields(email, password)
-        if(check_fields)
-        {
+    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    fun LoginButton(view: View) {
+        val email: String = Et_email_login.text?.trim().toString()
+        val password: String = Et_password_login.text?.trim().toString()
+        val check_fields: Boolean = checkFields(email, password)
+        if (check_fields) {
             return
-        }
-        else
-        {
+        } else {
             Progress_bar_login.visibility = View.VISIBLE
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-                if (task.isSuccessful)
-                {
+                if (task.isSuccessful) {
 
-                    val intent= Intent(this, UserSettingsActivity::class.java)
+                    val intent = Intent(this, UserSettingsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
 
                     Log.d(TAG, "login:success")
-                    Toast.makeText(this, getString(R.string.toast_login_success), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.toast_login_success), Toast.LENGTH_LONG)
+                        .show()
                     Progress_bar_login.visibility = View.GONE
                     finish()
 
-                }
-                else
-                {
-                    Toast.makeText(this, getString(R.string.invalid_email_password), Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.invalid_email_password),
+                        Toast.LENGTH_LONG
+                    ).show()
                     Progress_bar_login.visibility = View.GONE
                 }
             }
@@ -63,21 +61,22 @@ class LoginActivity : AppCompatActivity() {
         Progress_bar_login.visibility = View.GONE
 
     }
-    fun ForgotButton(view: View)
-    {
-        val intent= Intent(this, RemindPasswordActivity::class.java)
+
+    fun ForgotButton(view: View) {
+        val intent = Intent(this, RemindPasswordActivity::class.java)
         startActivity(intent)
     }
-    fun ShowPassword(view: View)
-    {
-        if(view.getId()==R.id.Btn_show_pass){
 
-            if(Et_password_login.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+    fun ShowPassword(view: View) {
+        if (view.getId() == R.id.Btn_show_pass) {
+
+            if (Et_password_login.getTransformationMethod()
+                    .equals(PasswordTransformationMethod.getInstance())
+            ) {
                 Btn_show_pass.setImageResource(R.drawable.eye_not_open)
                 //Show Password
-             Et_password_login.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            }
-            else{
+                Et_password_login.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
                 Btn_show_pass.setImageResource(R.drawable.eye_open)
                 //Hide Password
                 Et_password_login.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -86,7 +85,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    fun CheckFields(email: String, password: String):Boolean
+
+
+
+
+    fun checkFields(email: String, password: String):Boolean
     {
         var i:Int=0
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())

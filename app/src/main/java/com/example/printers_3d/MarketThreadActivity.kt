@@ -47,29 +47,29 @@ import java.util.regex.Pattern
 
 class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnForumThreadsItemClickListener,ForumThreadsMarketAdapter.OnForumThreadsItemClickListener2
 {
-        val list= ArrayList<Market_List_Thread>()
-        var generatePostID = ""
-        public var i=0
-        var m_text : String = ""
-        private var counter_images=0
-        private lateinit var imageUri: Uri
-        private var imageThumbnail: MutableList<ByteArray> = mutableListOf<ByteArray>()
-        private var imageBigPicture: MutableList<ByteArray> = mutableListOf<ByteArray>()
-        private  val REQUEST_IMAGE_CAPTURE=100
-        var portalSubPage:String=""
-        companion object {
-            //image pick code
-            private val IMAGE_PICK_CODE = 1000;
-            //Permission code
-            private val PERMISSION_CODE = 1001;
-        }
-        val TAG="ForumThread TAG"
-        var isSubPage: String?="Forum"
-        lateinit var database: DatabaseReference
-        lateinit var appSettingsPrefs: SharedPreferences
-        var user_ID: String?=null
-        var post_ID: String?=null
-        var titleThread: String?=null
+    val list= ArrayList<Market_List_Thread>()
+    var generatePostID = ""
+    public var i=0
+    var m_text : String = ""
+    private var counter_images=0
+    private lateinit var imageUri: Uri
+    private var imageThumbnail: MutableList<ByteArray> = mutableListOf<ByteArray>()
+    private var imageBigPicture: MutableList<ByteArray> = mutableListOf<ByteArray>()
+    private  val REQUEST_IMAGE_CAPTURE=100
+    var portalSubPage:String=""
+    companion object {
+        //image pick code
+        private val IMAGE_PICK_CODE = 1000;
+        //Permission code
+        private val PERMISSION_CODE = 1001;
+    }
+    val TAG="ForumThread TAG"
+    var isSubPage: String?="Forum"
+    lateinit var database: DatabaseReference
+    lateinit var appSettingsPrefs: SharedPreferences
+    var user_ID: String?=null
+    var post_ID: String?=null
+    var titleThread: String?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +77,10 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
         appSettingsPrefs = getSharedPreferences(
             "AppSettingPrefs",
             Context.MODE_PRIVATE)
+        this.swipeRefreshLayoutMarket.setOnRefreshListener {
+            this.finish()
+            startActivity(getIntent());
+        }
         val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode", true)
         if(isNightModeOn)
         {
@@ -155,7 +159,7 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
                                     ) {
                                         imageURLBigPicture2 = ds2.child("BigPictures").getValue(String::class.java)
                                     }
-                                    val post_id2 = ds.key.toString()
+                                    val post_id2 = ds2.key.toString()
 
                                     list.add(
                                         Market_List_Thread(
@@ -386,6 +390,21 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
             return
         }
         Progress_bar_market_thread.visibility = View.VISIBLE
+
+        val sdf = SimpleDateFormat("dd/M/yyyy HH:mm:ss")
+        val currentDate = sdf.format(Date())
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(portalSubPage)
+            .child(post_ID.toString())
+            .child("date2")
+            .setValue(currentDate)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                }
+                else {
+                    Toast.makeText(applicationContext, "error1", Toast.LENGTH_LONG).show()
+                }
+            }
         var md_busy = true
         while (md_busy == true) {
             val STRING_LENGTH = 20;
@@ -581,14 +600,35 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
             val imageUrii = data?.data as Uri
             val imageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
             val baos = ByteArrayOutputStream()
-            val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 220, 260) //96 128
-            resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            imageThumbnail.add(baos.toByteArray())
-            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
-            val baosBig = ByteArrayOutputStream()
-            val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            imageBigPicture.add(baosBig.toByteArray())
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 800, 600) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG,100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+
+            }
+            else
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 780, 1040) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG,100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+            }
             TV_picture_names_post_market.setText("")
 
             TV_picture_names_post_market.text=m_text+ ".png"
@@ -723,6 +763,10 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
                             intent.putExtra("POST_ID_PARENT", post_ID.toString())
                             intent.putExtra("POST_ID_CHILD", forum_list.post_id)
                             intent.putExtra("POST_DESCRIPTION", forum_list.description)
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                intent.putExtra("POST_THUMBNAIL", forum_list.imageThumbnail)
+                                intent.putExtra("POST_BIG_PICTURE", forum_list.imageBigPicture)
+                            }
                             startActivity(intent)
                         } else {
                             Toast.makeText(
@@ -739,12 +783,25 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
 
                 }
                 3 -> {
-                    if (position > 0) {
+                    if (position > 0 && !FirebaseAuth.getInstance().uid.toString()
+                            .equals("QdPiI7Ji0eM1RBLkh0DeT64thFE3")
+                    ) {
+
                         if (forum_list.user_id.equals(FirebaseAuth.getInstance().uid.toString())) {
                             val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
                                 .child(portalSubPage).child(post_ID.toString())
                                 .child(forum_list.post_id.toString())
                             deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
                             this.finish()
                             startActivity(getIntent())
 
@@ -753,6 +810,46 @@ class MarketThreadActivity : AppCompatActivity(), ForumThreadsMarketAdapter.OnFo
                                 applicationContext, getString(R.string.foreign_post_author),
                                 Toast.LENGTH_LONG
                             ).show()
+                        }
+                    } else if (FirebaseAuth.getInstance().uid.toString().equals("QdPiI7Ji0eM1RBLkh0DeT64thFE3")) {
+                        if (position == 0) {
+                            val intent2 = Intent(this, StartForumActivity::class.java)
+                            intent2.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(intent)
+                            val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+                                .child(portalSubPage).child(post_ID.toString())
+                            deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
+                            this.finish()
+                            startActivity(intent2)
+
+                        } else {
+
+                            val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+                                .child(portalSubPage).child(post_ID.toString())
+                                .child(forum_list.post_id.toString())
+                            deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
+                            this.finish()
+                            startActivity(getIntent())
                         }
                     } else {
                         Toast.makeText(

@@ -37,6 +37,21 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 
+//metoda zwraca wartość logiczną
+fun methodBoolean(arg1: String, arg2:Int):Boolean
+{
+    //lista instrukcji
+    return true
+    //lista instrukcji
+    return false
+}
+//metoda nie zwraca żadnej wartości
+fun methodUnit():Unit
+{
+    //lista instrukcji
+}
+
+
 @Suppress("DEPRECATION")
 class UserSettingsActivity : AppCompatActivity() {
     val TAG="UserSettings TAG"
@@ -199,6 +214,7 @@ class UserSettingsActivity : AppCompatActivity() {
                         }
 
 
+
                     Progress_bar_user_photo.visibility=View.GONE
                     finish();
                     overridePendingTransition(0, 0);
@@ -258,51 +274,114 @@ class UserSettingsActivity : AppCompatActivity() {
             resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
             val storageRef= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("Thumbnails").
             child(FirebaseAuth.getInstance().uid.toString())
-            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
-            val baosBig=ByteArrayOutputStream()
-            val resizedBitmapBig:Bitmap?=getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
-            child(FirebaseAuth.getInstance().uid.toString())
-            val imageThumbnail= baos.toByteArray()
-            val upload=storageRef.putBytes(imageThumbnail)
-            val imageBigPicture = baosBig.toByteArray()
-            val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
-            Progress_bar_user_photo.visibility=View.VISIBLE
-            upload.addOnCompleteListener{ task->
-                Progress_bar_user_photo.visibility=View.INVISIBLE
-                if(task.isSuccessful)
-                {
-                    storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
-                        urlTask.result?.let {
-                            imageUri=it
-                            // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
-                            IV_user_photo.setImageBitmap(resizedBitmap)
-                        }
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
 
-                    }
-                    uploadBigPicture.addOnCompleteListener{ task->
-                        Progress_bar_user_photo.visibility=View.INVISIBLE
-                        if(task.isSuccessful)
-                        {
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+
+
+                val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+                child(FirebaseAuth.getInstance().uid.toString())
+                val imageThumbnail= baos.toByteArray()
+                val upload=storageRef.putBytes(imageThumbnail)
+                val imageBigPicture = baosBig.toByteArray()
+                val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
+                Progress_bar_user_photo.visibility=View.VISIBLE
+                upload.addOnCompleteListener{ task->
+                    Progress_bar_user_photo.visibility=View.INVISIBLE
+                    if(task.isSuccessful)
+                    {
+                        storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
+                            urlTask.result?.let {
+                                imageUri=it
+                                // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
+                                IV_user_photo.setImageBitmap(resizedBitmap)
+                            }
 
                         }
-                        else
-                        {
-                            task.exception?.let{
-                                Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        uploadBigPicture.addOnCompleteListener{ task->
+                            Progress_bar_user_photo.visibility=View.INVISIBLE
+                            if(task.isSuccessful)
+                            {
+
+                            }
+                            else
+                            {
+                                task.exception?.let{
+                                    Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
+                        UpdateDataWithAvatarLinkToThread()
                     }
-                    UpdateDataWithAvatarLinkToThread()
+                    else
+                    {
+                        task.exception?.let{
+                            Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
-                else
-                {
-                    task.exception?.let{
-                        Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+
+            }
+            else
+            {
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+
+                val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+                child(FirebaseAuth.getInstance().uid.toString())
+                val imageThumbnail= baos.toByteArray()
+                val upload=storageRef.putBytes(imageThumbnail)
+                val imageBigPicture = baosBig.toByteArray()
+                val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
+                Progress_bar_user_photo.visibility=View.VISIBLE
+                upload.addOnCompleteListener{ task->
+                    Progress_bar_user_photo.visibility=View.INVISIBLE
+                    if(task.isSuccessful)
+                    {
+                        storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
+                            urlTask.result?.let {
+                                imageUri=it
+                                // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
+                                IV_user_photo.setImageBitmap(resizedBitmap)
+                            }
+
+                        }
+                        uploadBigPicture.addOnCompleteListener{ task->
+                            Progress_bar_user_photo.visibility=View.INVISIBLE
+                            if(task.isSuccessful)
+                            {
+
+                            }
+                            else
+                            {
+                                task.exception?.let{
+                                    Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                        UpdateDataWithAvatarLinkToThread()
+                    }
+                    else
+                    {
+                        task.exception?.let{
+                            Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }
+
 
 
         }  // take from gallery
@@ -316,47 +395,111 @@ class UserSettingsActivity : AppCompatActivity() {
             child(FirebaseAuth.getInstance().uid.toString())
             val resizedBitmap:Bitmap?=getResizedBitmap(imageBitmap, 102, 136)//96 128
             resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            val imageBitmapBig = data?.extras?.get("data") as Bitmap
-            val baosBig=ByteArrayOutputStream()
-            val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
-            child(FirebaseAuth.getInstance().uid.toString())
-            val resizedBitmapBig:Bitmap?=getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            val imageThumbnail= baos.toByteArray()
-            val upload=storageRef.putBytes(imageThumbnail)
-            val imageBigPicture = baosBig.toByteArray()
-            val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
-            Progress_bar_user_photo.visibility=View.VISIBLE
-            upload.addOnCompleteListener{ task->
-                Progress_bar_user_photo.visibility=View.INVISIBLE
-                if(task.isSuccessful)
-                {
-                    storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
-                        urlTask.result?.let {
-                            imageUri=it
-                           // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
-                            IV_user_photo.setImageBitmap(resizedBitmap)
-                        }
-                    }
-                    uploadBigPicture.addOnCompleteListener{ task->
-                        Progress_bar_user_photo.visibility=View.INVISIBLE
-                        if(task.isSuccessful)
-                        {
+
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
+
+                val imageBitmapBig = data?.extras?.get("data") as Bitmap
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+
+
+                val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+                child(FirebaseAuth.getInstance().uid.toString())
+                val imageThumbnail= baos.toByteArray()
+                val upload=storageRef.putBytes(imageThumbnail)
+                val imageBigPicture = baosBig.toByteArray()
+                val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
+                Progress_bar_user_photo.visibility=View.VISIBLE
+                upload.addOnCompleteListener{ task->
+                    Progress_bar_user_photo.visibility=View.INVISIBLE
+                    if(task.isSuccessful)
+                    {
+                        storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
+                            urlTask.result?.let {
+                                imageUri=it
+                                // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
+                                IV_user_photo.setImageBitmap(resizedBitmap)
+                            }
 
                         }
-                        else
-                        {
-                            task.exception?.let{
-                                Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        uploadBigPicture.addOnCompleteListener{ task->
+                            Progress_bar_user_photo.visibility=View.INVISIBLE
+                            if(task.isSuccessful)
+                            {
+
+                            }
+                            else
+                            {
+                                task.exception?.let{
+                                    Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
+                        UpdateDataWithAvatarLinkToThread()
                     }
-                    UpdateDataWithAvatarLinkToThread()
+                    else
+                    {
+                        task.exception?.let{
+                            Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
-                else
-                {
-                    task.exception?.let{
-                        Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+
+            }
+            else
+            {
+                val imageBitmapBig = data?.extras?.get("data") as Bitmap
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+
+                val storageRefBig= FirebaseStorage.getInstance().reference.child("UserPhotoPictures").child("BigPicture").
+                child(FirebaseAuth.getInstance().uid.toString())
+                val imageThumbnail= baos.toByteArray()
+                val upload=storageRef.putBytes(imageThumbnail)
+                val imageBigPicture = baosBig.toByteArray()
+                val uploadBigPicture=storageRefBig.putBytes(imageBigPicture)
+                Progress_bar_user_photo.visibility=View.VISIBLE
+                upload.addOnCompleteListener{ task->
+                    Progress_bar_user_photo.visibility=View.INVISIBLE
+                    if(task.isSuccessful)
+                    {
+                        storageRef.downloadUrl.addOnCompleteListener{ urlTask ->
+                            urlTask.result?.let {
+                                imageUri=it
+                                // Toast.makeText(this,imageUri.toString(),Toast.LENGTH_LONG).show()
+                                IV_user_photo.setImageBitmap(resizedBitmap)
+                            }
+
+                        }
+                        uploadBigPicture.addOnCompleteListener{ task->
+                            Progress_bar_user_photo.visibility=View.INVISIBLE
+                            if(task.isSuccessful)
+                            {
+
+                            }
+                            else
+                            {
+                                task.exception?.let{
+                                    Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                        UpdateDataWithAvatarLinkToThread()
+                    }
+                    else
+                    {
+                        task.exception?.let{
+                            Toast.makeText(this, it.message!!, Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

@@ -28,6 +28,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_forum_thread.*
 import kotlinx.android.synthetic.main.activity_forum_thread.btn_add_image
@@ -48,6 +49,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+
 
 class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThreadsItemClickListener,ForumThreadsAdapter.OnForumThreadsItemClickListener2
 {
@@ -82,6 +84,10 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
             "AppSettingPrefs",
             Context.MODE_PRIVATE
         )
+        this.swipeRefreshLayout.setOnRefreshListener {
+            this.finish()
+            startActivity(getIntent());
+        }
         val isNightModeOn:Boolean= appSettingsPrefs.getBoolean("NightMode", true)
         if(isNightModeOn)
         {
@@ -91,6 +97,7 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
         {
             btn_add_image.setBackgroundResource(R.drawable.picture)
         }
+
         isSubPage= appSettingsPrefs.getString("PortalSubPage", null)
         portalSubPage = appSettingsPrefs.getString("PortalSubPage", "").toString()
         database = Firebase.database.reference
@@ -465,6 +472,7 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
         }
 
     }
+    @SuppressLint("SimpleDateFormat")
     fun SaveThreadButton(v: View) {
         
 
@@ -477,6 +485,22 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
             return
         }
         Progress_bar_forum_thread.visibility = View.VISIBLE
+        val sdf = SimpleDateFormat("dd/M/yyyy HH:mm:ss")
+        val currentDate = sdf.format(Date())
+        FirebaseDatabase.getInstance().getReference("Posts")
+            .child(portalSubPage)
+            .child(post_ID.toString())
+            .child("date2")
+            .setValue(currentDate)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                }
+                else {
+                    Toast.makeText(applicationContext, "error1", Toast.LENGTH_LONG).show()
+                }
+            }
+
+
         var md_busy = true
         while (md_busy == true) {
             val STRING_LENGTH = 20;
@@ -707,14 +731,41 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
             val imageUrii = data?.data as Uri
             val imageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
             val baos = ByteArrayOutputStream()
-            val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 220, 260) //96 128
-            resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            imageThumbnail.add(baos.toByteArray())
-            val imageBitmapBig = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUrii)
-            val baosBig = ByteArrayOutputStream()
-            val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040)
-            resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
-            imageBigPicture.add(baosBig.toByteArray())
+            var x=0
+            var y=0
+            x=imageBitmap.width
+            y=imageBitmap.height
+            if(x>y)
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 800, 600) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(
+                    this.contentResolver,
+                    imageUrii
+                )
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 800, 600) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+
+            }
+            else
+            {
+                val resizedBitmap: Bitmap? = getResizedBitmap(imageBitmap, 780, 1040) //96 128
+                resizedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                imageThumbnail.add(baos.toByteArray())
+                val imageBitmapBig = MediaStore.Images.Media.getBitmap(
+                    this.contentResolver,
+                    imageUrii
+                )
+                val baosBig = ByteArrayOutputStream()
+                val resizedBitmapBig: Bitmap? = getResizedBitmap(imageBitmapBig, 780, 1040) //96 128
+                resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                //resizedBitmapBig?.compress(Bitmap.CompressFormat.PNG, 100, baosBig)
+                imageBigPicture.add(baosBig.toByteArray())
+            }
             TV_picture_names_post_thread.setText("")
 
             TV_picture_names_post_thread.text=m_text+ ".png"
@@ -849,6 +900,10 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
                             intent.putExtra("POST_ID_PARENT", post_ID.toString())
                             intent.putExtra("POST_ID_CHILD", forum_list.post_id)
                             intent.putExtra("POST_DESCRIPTION", forum_list.description)
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                intent.putExtra("POST_THUMBNAIL", forum_list.imageThumbnail)
+                                intent.putExtra("POST_BIG_PICTURE", forum_list.imageBigPicture)
+                            }
                             startActivity(intent)
                         } else {
                             Toast.makeText(
@@ -865,12 +920,25 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
 
                 }
                 3 -> {
-                    if (position > 0) {
+                    if (position > 0 && !FirebaseAuth.getInstance().uid.toString()
+                            .equals("QdPiI7Ji0eM1RBLkh0DeT64thFE3")
+                    ) {
+
                         if (forum_list.user_id.equals(FirebaseAuth.getInstance().uid.toString())) {
                             val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
                                 .child(portalSubPage).child(post_ID.toString())
                                 .child(forum_list.post_id.toString())
                             deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
                             this.finish()
                             startActivity(getIntent())
 
@@ -879,6 +947,48 @@ class ForumThreadActivity : AppCompatActivity(), ForumThreadsAdapter.OnForumThre
                                 applicationContext, getString(R.string.foreign_post_author),
                                 Toast.LENGTH_LONG
                             ).show()
+                        }
+                    } else if (FirebaseAuth.getInstance().uid.toString()
+                            .equals("QdPiI7Ji0eM1RBLkh0DeT64thFE3")
+                    ) {
+                        if (position == 0) {
+                            val intent2 = Intent(this, StartForumActivity::class.java)
+                            intent2.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(intent)
+                            val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+                                .child(portalSubPage).child(post_ID.toString())
+                            deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
+
+
+                        } else {
+
+                            val deleteRef = FirebaseDatabase.getInstance().getReference("Posts")
+                                .child(portalSubPage).child(post_ID.toString())
+                                .child(forum_list.post_id.toString())
+                            deleteRef.removeValue()
+                            if(forum_list.imageThumbnail!=null && forum_list.imageBigPicture!=null) {
+                                val photoRef =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageThumbnail.toString())
+                                photoRef.delete()
+                                val photoRef2 =
+                                    FirebaseStorage.getInstance()
+                                        .getReferenceFromUrl(forum_list.imageBigPicture.toString())
+                                photoRef2.delete()
+                            }
+                            this.finish()
+                            startActivity(getIntent())
+
                         }
                     } else {
                         Toast.makeText(

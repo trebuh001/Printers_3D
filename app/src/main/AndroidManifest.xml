@@ -24,6 +24,7 @@
         <activity android:name=".BigPictureActivity" />
         <activity android:name=".NewThreadActivity" />
         <activity android:name=".StartForumActivity" />
+        
         <activity
             android:name=".ChangePasswordActivity"
             android:screenOrientation="portrait" />

@@ -66,7 +66,6 @@
                         android:singleLine="false"
                         android:minLines="1"
                         android:maxLines="2"
-                        android:textIsSelectable="true"
                         android:text=""
                         android:textColor="@color/text_standard_color"
                         android:textSize="14sp"
@@ -78,7 +77,6 @@
                         android:layout_height="wrap_content"
                         android:paddingVertical="3dp"
                         android:text="@string/user_name"
-                        android:textIsSelectable="true"
                         android:textColor="@color/text_standard_color"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -115,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:paddingVertical="10dp"
+            android:layout_marginHorizontal="15dp"
             android:scaleType="centerInside" />
 
         <TextView

@@ -22,8 +22,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_forum_thread.*
 import kotlinx.android.synthetic.main.activity_start_forum.*
+import kotlinx.android.synthetic.main.activity_start_forum.rv
 import java.util.*
+
 
 
 @Suppress("NAME_SHADOWING")
@@ -37,6 +40,11 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_forum)
         database = Firebase.database.reference
+
+        this.swipeRefreshLayoutStartForum.setOnRefreshListener {
+            this.finish()
+            startActivity(getIntent());
+        }
 
         var appSettingsPrefs: SharedPreferences = getSharedPreferences(
             "AppSettingPrefs",
@@ -291,7 +299,9 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var i=0;
+
                 for (ds in dataSnapshot.children) {
+                    var date=""
                     val post_id = ds.key.toString()
                     var imageURL: String? = null
                     if (extras?.containsKey("BROWSE_TITLE") == true) {
@@ -309,7 +319,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 25) {
                                 title = title.substring(0, 25) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -335,7 +351,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 20) {
                                 title = title.substring(0, 20) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -361,7 +383,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 20) {
                                 title = title.substring(0, 20) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -389,7 +417,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 25) {
                                 title = title.substring(0, 25) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -432,8 +466,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                                             if (title?.length!! > 25) {
                                                 title = title?.substring(0, 25) + "..."
                                             }
-                                            val date =
-                                                ds2.child("date").getValue(String::class.java)
+                                            if(ds2.child("date2").exists())
+                                            {
+                                                date = ds2.child("date2").getValue(String::class.java).toString()
+                                            }
+                                            else {
+                                                date = ds2.child("date").getValue(String::class.java).toString()
+                                            }
                                             val author =
                                                 ds2.child("name").getValue(String::class.java)
                                             val user_id =
@@ -485,7 +524,14 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 25) {
                                 title = title?.substring(0, 25) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else
+                            {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -528,8 +574,14 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                                             if (title?.length!! > 25) {
                                                 title = title?.substring(0, 25) + "..."
                                             }
-                                            val date =
-                                                ds2.child("date").getValue(String::class.java)
+                                            if(ds2.child("date2").exists())
+                                            {
+                                                date = ds2.child("date2").getValue(String::class.java).toString()
+                                            }
+                                            else
+                                            {
+                                                date = ds2.child("date").getValue(String::class.java).toString()
+                                            }
                                             val author =
                                                 ds2.child("name").getValue(String::class.java)
                                             val user_id =
@@ -584,7 +636,14 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                             if (title?.length!! > 25) {
                                 title = title?.substring(0, 25) + "..."
                             }
-                            val date = ds.child("date").getValue(String::class.java)
+                            if(ds.child("date2").exists())
+                            {
+                                date = ds.child("date2").getValue(String::class.java).toString()
+                            }
+                            else
+                            {
+                                date = ds.child("date").getValue(String::class.java).toString()
+                            }
                             val author = ds.child("name").getValue(String::class.java)
                             val user_id = ds.child("user_id").getValue(String::class.java)
                             if (ds.child("avatar").getValue(String::class.java) != null) {
@@ -627,10 +686,15 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                                             if (title?.length!! > 25) {
                                                 title = title?.substring(0, 25) + "..."
                                             }
-                                            val date =
-                                                ds2.child("date").getValue(String::class.java)
-                                            val author =
-                                                ds2.child("name").getValue(String::class.java)
+                                            if(ds2.child("date2").exists())
+                                            {
+                                                date = ds2.child("date2").getValue(String::class.java).toString()
+                                            }
+                                            else
+                                            {
+                                                date = ds2.child("date").getValue(String::class.java).toString()
+                                            }
+                                            val author = ds2.child("name").getValue(String::class.java)
                                             val user_id =
                                                 ds2.child("user_id").getValue(String::class.java)
                                             if (ds2.child("avatar")
@@ -670,7 +734,13 @@ class StartForumActivity : AppCompatActivity(), ForumAdapter.OnForumItemClickLis
                         if (title?.length!! > 25) {
                             title = title?.substring(0, 25) + "..."
                         }
-                        val date = ds.child("date").getValue(String::class.java)
+                        if(ds.child("date2").exists())
+                        {
+                            date = ds.child("date2").getValue(String::class.java).toString()
+                        }
+                        else {
+                            date = ds.child("date").getValue(String::class.java).toString()
+                        }
                         val author = ds.child("name").getValue(String::class.java)
                         val user_id = ds.child("user_id").getValue(String::class.java)
                         if (ds.child("avatar").getValue(String::class.java) != null) {
